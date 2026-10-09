@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ru" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кейлс (Камни)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .stone {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-[#F7F5F0] dark:bg-[#1A1D20] text-[#2C3034] dark:text-[#E2E8F0] min-h-screen flex flex-col justify-between transition-colors duration-300">
+
+    <!-- Хэппи-хедер с настройками и темами -->
+    <header class="w-full max-w-4xl mx-auto p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold tracking-tight flex items-center gap-2">
+            🪨 <span id="ui-title">Кейлс (Камни)</span>
+        </h1>
+        <div class="flex items-center gap-2">
+            <!-- Переключатель языка -->
+            <select id="langSelect" class="bg-white dark:bg-[#2A2E33] border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-1.5 text-sm outline-none cursor-pointer">
+                <option value="ru">🇷🇺 Русский</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="zh">🇨🇳 中文</option>
+            </select>
+            <!-- Переключатель темы -->
+            <button id="themeToggle" class="p-2 rounded-xl bg-white dark:bg-[#2A2E33] border border-gray-300 dark:border-gray-700 hover:scale-105 transition">
+                🌙
+            </button>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="w-full max-w-4xl mx-auto p-4 flex-1 flex flex-col items-center justify-center">
+
+        <!-- ЭКРАН 1: НАСТРОЙКИ -->
+        <div id="setupScreen" class="w-full max-w-md bg-white dark:bg-[#22262B] p-6 rounded-3xl shadow-xl border border-gray-200/60 dark:border-gray-800 space-y-5">
+            <h2 id="ui-settings-title" class="text-xl font-bold text-center mb-2">Настройки игры</h2>
+
+            <!-- Количество камней -->
+            <div>
+                <label class="flex justify-between text-sm font-medium mb-1">
+                    <span id="ui-stones-label">Количество камней:</span>
+                    <span id="stoneCountVal" class="font-bold text-amber-600 dark:text-amber-400">12</span>
+                </label>
+                <input type="range" id="stoneCount" min="5" max="30" value="12" class="w-full accent-amber-600 cursor-pointer">
+            </div>
+
+            <!-- Форма расстановки -->
+            <div>
+                <label class="block text-sm font-medium mb-1" id="ui-layout-label">Форма расстановки:</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" data-layout="circle" class="layout-btn py-2 px-4 rounded-xl border border-amber-600 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-medium text-sm transition">По кругу</button>
+                    <button type="button" data-layout="line" class="layout-btn py-2 px-4 rounded-xl border border-gray-300 dark:border-gray-700 text-sm transition">В ряд</button>
+                </div>
+            </div>
+
+            <!-- Режим игры -->
+            <div>
+                <label class="block text-sm font-medium mb-1" id="ui-mode-label">Режим игры:</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" data-mode="pvp" class="mode-btn py-2 px-4 rounded-xl border border-amber-600 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-medium text-sm transition">Игрок vs Игрок</button>
+                    <button type="button" data-mode="ai" class="mode-btn py-2 px-4 rounded-xl border border-gray-300 dark:border-gray-700 text-sm transition">Против Робота</button>
+                </div>
+            </div>
+
+            <!-- Количество игроков -->
+            <div id="playersCountContainer">
+                <label class="block text-sm font-medium mb-1" id="ui-players-label">Количество игроков (2-6):</label>
+                <select id="playersCount" class="w-full bg-gray-50 dark:bg-[#1A1D20] border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-sm outline-none">
+                    <option value="2">2 Игрока</option>
+                    <option value="3">3 Игрока</option>
+                    <option value="4">4 Игрока</option>
+                    <option value="5">5 Игроков</option>
+                    <option value="6">6 Игроков</option>
+                </select>
+            </div>
+
+            <!-- Правила победы -->
+            <div>
+                <label class="block text-sm font-medium mb-1" id="ui-rules-label">Правила:</label>
+                <select id="gameRules" class="w-full bg-gray-50 dark:bg-[#1A1D20] border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-sm outline-none">
+                    <option value="normal" id="ui-rule-normal">Последний камень побеждает</option>
+                    <option value="misere" id="ui-rule-misere">Последний камень проигрывает (Мизер)</option>
+                </select>
+            </div>
+
+            <button id="startBtn" class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-2xl shadow-lg shadow-amber-600/20 transition cursor-pointer">
+                Начать игру
+            </button>
+        </div>
+
+        <!-- ЭКРАН 2: ИГРОВОЙ ПРОЦЕСС -->
+        <div id="gameScreen" class="hidden w-full flex flex-col items-center space-y-6">
+            <!-- Статус игры -->
+            <div class="flex flex-col items-center">
+                <span id="currentTurnText" class="text-lg font-bold text-amber-600 dark:text-amber-400">Ход игрока 1</span>
+                <span id="instructionText" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Выберите 1 камень или 2 соседних</span>
+            </div>
+
+            <!-- Поле с камнями -->
+            <div id="boardContainer" class="relative w-full max-w-lg h-96 flex items-center justify-center bg-white/50 dark:bg-[#22262B]/50 rounded-3xl border border-gray-200/50 dark:border-gray-800/50 shadow-inner overflow-hidden p-4">
+                <!-- Сюда динамически рендерятся камни -->
+            </div>
+
+            <!-- Уведомление / Ошибка правила -->
+            <div id="toast" class="opacity-0 transition-opacity duration-300 bg-red-100 dark:bg-red-950/80 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-2 rounded-xl text-sm text-center max-w-md">
+                Можно брать только 1 камень или 2 соседних!
+            </div>
+
+            <!-- Кнопки управления ходом -->
+            <div class="flex gap-3">
+                <button id="confirmMoveBtn" class="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl shadow transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                    Подтвердить ход
+                </button>
+                <button id="backToMenuBtn" class="px-4 py-2.5 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-sm font-medium rounded-xl transition cursor-pointer">
+                    В меню
+                </button>
+            </div>
+        </div>
+
+        <!-- МОДАЛКА ПОБЕДЫ -->
+        <div id="winModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div class="bg-white dark:bg-[#22262B] p-6 rounded-3xl shadow-2xl max-w-sm w-full text-center space-y-4 border border-gray-200 dark:border-gray-800">
+                <div class="text-4xl">🏆</div>
+                <h3 id="winnerText" class="text-xl font-bold">Игрок 1 побеждает!</h3>
+                <button id="restartBtn" class="w-full py-3 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-2xl transition cursor-pointer">
+                    Играть снова
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Футер -->
+    <footer class="w-full max-w-4xl mx-auto p-4 text-center text-xs text-gray-400">
+        Kayles Game • Zen Minimalist Edition
+    </footer>
+
+    <!-- Логика игры -->
+    <script>
+        // Переводы интерфейса
+        const i18n = {
+            ru: {
+                title: "Кейлс (Камни)", settingsTitle: "Настройки игры", stonesLabel: "Количество камней:",
+                layoutLabel: "Форма расстановки:", circle: "По кругу", line: "В ряд",
+                modeLabel: "Режим игры:", pvp: "Игрок vs Игрок", ai: "Против Робота",
+                playersLabel: "Количество игроков (2-6):", rulesLabel: "Правила:",
+                ruleNormal: "Последний камень побеждает", ruleMisere: "Последний камень проигрывает (Мизер)",
+                start: "Начать игру", confirm: "Подтвердить ход", menu: "В меню",
+                turn: "Ход", robot: "Робот", instruction: "Выберите 1 камень или 2 соседних",
+                error: "Можно брать только 1 камень или 2 камня, лежащих строго рядом!",
+                win: "побеждает!", rematches: "Играть снова"
+            },
+            en: {
+                title: "Kayles", settingsTitle: "Game Settings", stonesLabel: "Stones count:",
+                layoutLabel: "Layout style:", circle: "Circle", line: "Line",
+                modeLabel: "Game mode:", pvp: "Player vs Player", ai: "Against Robot",
+                playersLabel: "Players count (2-6):", rulesLabel: "Rules:",
+                ruleNormal: "Last stone wins", ruleMisere: "Last stone loses (Misere)",
+                start: "Start Game", confirm: "Confirm Move", menu: "Menu",
+                turn: "Turn of", robot: "Robot", instruction: "Select 1 stone or 2 adjacent ones",
+                error: "You can take only 1 stone or 2 strictly adjacent stones!",
+                win: "wins!", rematches: "Play Again"
+            },
+            es: {
+                title: "Kayles", settingsTitle: "Ajustes del juego", stonesLabel: "Número de piedras:",
+                layoutLabel: "Diseño:", circle: "Círculo", line: "Línea",
+                modeLabel: "Modo de juego:", pvp: "Jugador vs Jugador", ai: "Contra Robot",
+                playersLabel: "Jugadores (2-6):", rulesLabel: "Reglas:",
+                ruleNormal: "La última piedra gana", ruleMisere: "La última piedra pierde",
+                start: "Empezar", confirm: "Confirmar", menu: "Menú",
+                turn: "Turno de", robot: "Robot", instruction: "Selecciona 1 piedra o 2 adyacentes",
+                error: "¡Solo puedes tomar 1 piedra o 2 piedras adyacentes!",
+                win: "¡gana!", rematches: "Jugar de nuevo"
+            },
+            de: {
+                title: "Kayles", settingsTitle: "Spieleinstellungen", stonesLabel: "Steinanzahl:",
+                layoutLabel: "Anordnung:", circle: "Kreis", line: "Reihe",
+                modeLabel: "Spielmodus:", pvp: "Spieler vs Spieler", ai: "Gegen Roboter",
+                playersLabel: "Spieler (2-6):", rulesLabel: "Regeln:",
+                ruleNormal: "Letzter Stein gewinnt", ruleMisere: "Letzter Stein verliert",
+                start: "Spiel starten", confirm: "Zug bestätigen", menu: "Menü",
+                turn: "Am Zug:", robot: "Roboter", instruction: "Wähle 1 Stein oder 2 benachbarte Steine",
+                error: "Du kannst nur 1 Stein oder 2 direkt benachbarte Steine nehmen!",
+                win: "gewinnt!", rematches: "Nochmal spielen"
+            },
+            zh: {
+                title: "克勒斯游戏", settingsTitle: "游戏设置", stonesLabel: "石头数量:",
+                layoutLabel: "布局方式:", circle: "环形", line: "直线",
+                modeLabel: "游戏模式:", pvp: "双人对战", ai: "人机对战",
+                playersLabel: "玩家人数 (2-6):", rulesLabel: "规则:",
+                ruleNormal: "拿走最后一块石头者胜", ruleMisere: "拿走最后一块石头者负",
+                start: "开始游戏", confirm: "确认出牌", menu: "菜单",
+                turn: "轮到", robot: "机器人", instruction: "请选择1块或2块相邻的石头",
+                error: "只能选择1块石头或2块紧邻的石头！",
+                win: "获胜！", rematches: "再玩一次"
+            }
+        };
+
+        let currentLang = 'ru';
+
+        // Состояние игры
+        let state = {
+            stoneCount: 12,
+            layout: 'circle', // circle | line
+            mode: 'pvp',      // pvp | ai
+            playersCount: 2,
+            rules: 'normal',  // normal | misere
+            stones: [],       // массив объектов камней: { id, active: true }
+            selected: [],     // id выбранных камней
+            currentPlayer: 1, // от 1 до playersCount
+            isGameOver: false
+        };
+
+        // DOM элементы
+        const $ = id => document.getElementById(id);         const $$ = selector => document.querySelectorAll(selector);
+
+        // Инициализация языка
+        function updateTexts() {
+            const t = i18n[currentLang];
+            $('ui-title').innerText = t.title;
+            $('ui-settings-title').innerText = t.settingsTitle;
+            $('ui-stones-label').innerText = t.stonesLabel;
+            $('ui-layout-label').innerText = t.layoutLabel;
+            $('ui-mode-label').innerText = t.modeLabel;
+            $('ui-players-label').innerText = t.playersLabel;
+            $('ui-rules-label').innerText = t.rulesLabel;
+            $('ui-rule-normal').innerText = t.ruleNormal;
+            $('ui-rule-misere').innerText = t.ruleMisere;
+            $('startBtn').innerText = t.start;
+            $('confirmMoveBtn').innerText = t.confirm;
+            $('backToMenuBtn').innerText = t.menu;
+            $('restartBtn').innerText = t.rematches;
+            
+            // Кнопки макета
+            $$('.layout-btn').forEach(btn => {                 if(btn.dataset.layout === 'circle') btn.innerText = t.circle;                 if(btn.dataset.layout === 'line') btn.innerText = t.line;             });$$
+('.mode-btn').forEach(btn => {
+                if(btn.dataset.mode === 'pvp') btn.innerText = t.pvp;
+                if(btn.dataset.mode === 'ai') btn.innerText = t.ai;
+            });
+        }
+
+        $('langSelect').addEventListener('change', e => {
+            currentLang = e.target.value;
+            updateTexts();
+            if (!$('gameScreen').classList.contains('hidden')) updateGameUI();
+        });
+
+        // Переключение темы
+        $('themeToggle').addEventListener('click', () => {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                $('themeToggle').innerText = '🌙';
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                $('themeToggle').innerText = '☀️';
+            }
+        });
+
+        // Настройки слайдера камней
+        $('stoneCount').addEventListener('input', e => {$('stoneCountVal').innerText = e.target.value;
+            state.stoneCount = parseInt(e.target.value);
+        });
+
+        // Выбор макета
+        $$('.layout-btn').forEach(btn => {             btn.addEventListener('click', () => {                 $$
+('.layout-btn').forEach(b => b.className = "layout-btn py-2 px-4 rounded-xl border border-gray-300 dark:border-gray-700 text-sm transition");
+                btn.className = "layout-btn py-2 px-4 rounded-xl border border-amber-600 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-medium text-sm transition";
+                state.layout = btn.dataset.layout;
+            });
+        });
+
+        // Выбор режима
+        $$('.mode-btn').forEach(btn => {             btn.addEventListener('click', () => {                 $$
+('.mode-btn').forEach(b => b.className = "mode-btn py-2 px-4 rounded-xl border border-gray-300 dark:border-gray-700 text-sm transition");
+                btn.className = "mode-btn py-2 px-4 rounded-xl border border-amber-600 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-medium text-sm transition";
+                state.mode = btn.dataset.mode;
+                $('playersCountContainer').style.display = (state.mode === 'ai') ? 'none' : 'block';
+            });
+        });
+
+        // Старт игры
+        $('startBtn').addEventListener('click', () => {
+            state.playersCount = state.mode === 'ai' ? 2 : parseInt($('playersCount').value);
+            state.rules = $('gameRules').value;
+            state.stones = Array.from({ length: state.stoneCount }, (_, i) => ({ id: i, active: true }));
+            state.selected = [];
+            state.currentPlayer = 1;
+            state.isGameOver = false;
+
+            $('setupScreen').classList.add('hidden');$('gameScreen').classList.remove('hidden');
+            renderBoard();
+            updateGameUI();
+        });
+
+        $('backToMenuBtn').addEventListener('click', () => {
+            $('gameScreen').classList.add('hidden');$('setupScreen').classList.remove('hidden');
+        });
+
+        $('restartBtn').addEventListener('click', () => {$('winModal').classList.add('hidden');
+            $('gameScreen').classList.add('hidden');$('setupScreen').classList.remove('hidden');
+        });
+
+        // Проверка соседства камней (с учетом круга и удаленных камней)
+        function checkAreNeighbors(id1, id2) {
+            if (id1 === id2) return true;
+            const activeStones = state.stones.filter(s => s.active).map(s => s.id);
+            const idx1 = activeStones.indexOf(id1);
+            const idx2 = activeStones.indexOf(id2);
+            if (idx1 === -1 || idx2 === -1) return false;
+
+            // В линейном режиме соседи строго по индексу массива activeStones
+            if (state.layout === 'line') {
+                return Math.abs(idx1 - idx2) === 1;
+            }
+
+            // В круговом режиме крайние элементы также соединены
+            const len = activeStones.length;
+            const diff = Math.abs(idx1 - idx2);
+            return diff === 1 || diff === len - 1;
+        }
+
+        // Клик по камню
+        function handleStoneClick(id) {
+            if (state.isGameOver) return;
+            // Если ход робота в режиме ИИ, блокируем клики
+            if (state.mode === 'ai' && state.currentPlayer === 2) return;
+
+            const stoneIndex = state.selected.indexOf(id);
+            if (stoneIndex > -1) {
+                // Отмена выбора
+                state.selected.splice(stoneIndex, 1);
+            } else {
+                if (state.selected.length >= 2) {
+                    state.selected = [id]; // сбросить и выбрать новый
+                } else if (state.selected.length === 1) {
+                    // Проверяем, сосед ли с уже выбранным
+                    if (checkAreNeighbors(state.selected[0], id)) {
+                        state.selected.push(id);
+                    } else {
+                        showToast(i18n[currentLang].error);
+                        state.selected = [id]; // перевыбрать этот
+                        renderBoard();
+                        return;
+                    }
+                } else {
+                    state.selected.push(id);
+                }
+            }
+            renderBoard();
+        }
+
+        // Всплывающая ошибка
+        function showToast(text) {
+            const toast = $('toast');
+            toast.innerText = text;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 2500);
+        }
+
+        // Рендеринг игрового поля
+        function renderBoard() {
+            const container = $('boardContainer');
+            container.innerHTML = '';
+            const activeStones = state.stones.filter(s => s.active);
+
+            if (activeStones.length === 0) return;
+
+            if (state.layout === 'circle') {
+                const radius = 110;
+                const centerX = container.clientWidth / 2 || 180;
+                const centerY = container.clientHeight / 2 || 180;
+                const total = activeStones.length;
+
+                activeStones.forEach((stone, index) => {
+                    const angle = (index * 2 * Math.PI) / total - Math.PI / 2;
+                    const x = centerX + radius * Math.cos(angle) - 22;
+                    const y = centerY + radius * Math.sin(angle) - 22;
+
+                    const el = createStoneElement(stone);
+                    el.style.position = 'absolute';
+                    el.style.left = `${x}px`;
+                    el.style.top = `${y}px`;
+                    container.appendChild(el);
+                });
+            } else {
+                // В ряд
+                const grid = document.createElement('div');
+                grid.className = 'flex flex-wrap gap-3 justify-center items-center max-w-sm';
+                activeStones.forEach(stone => {
+                    grid.appendChild(createStoneElement(stone));
+                });
+                container.appendChild(grid);
+            }
+        }
+
+        function createStoneElement(stone) {
+            const el = document.createElement('button');
+            const isSelected = state.selected.includes(stone.id);
+            el.className = `stone w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-xs shadow-md cursor-pointer transition transform active:scale-95 ${
+                isSelected 
+                    ? 'bg-amber-600 text-white ring-4 ring-amber-600/30 scale-105' 
+                    : 'bg-white dark:bg-[#2A2E33] border border-gray-200 dark:border-gray-700 hover:border-amber-500'
+            }`;
+            el.innerText = stone.id + 1;
+            el.onclick = () => handleStoneClick(stone.id);
+            return el;
+        }
+
+        // Обновление интерфейса хода
+        function updateGameUI() {
+            const t = i18n[currentLang];
+            const name = (state.mode === 'ai' && state.currentPlayer === 2) ? t.robot : `${t.turn.toLowerCase()} ${state.currentPlayer}`;
+            $('currentTurnText').innerText = `${t.turn} ${state.currentPlayer === 2 && state.mode === 'ai' ? t.robot : state.currentPlayer}`;
+            $('instructionText').innerText = t.instruction;
+            $('confirmMoveBtn').disabled = state.selected.length === 0;
+        }
+
+        // Кнопка подтверждения хода
+        $('confirmMoveBtn').addEventListener('click', () => {
+            if (state.selected.length === 0) return;
+            executeMove(state.selected);
+        });
+
+        function executeMove(stoneIds) {
+            // Удаляем камни
+            state.stones.forEach(s => {
+                if (stoneIds.includes(s.id)) s.active = false;
+            });
+            state.selected = [];
+
+            // Проверяем, остались ли активные камни
+            const remaining = state.stones.filter(s => s.active);
+
+            if (remaining.length === 0) {
+                // Конец игры!
+                endGame(state.currentPlayer);
+                return;
+            }
+
+            // Передача хода
+            state.currentPlayer = state.currentPlayer % state.playersCount + 1;
+            renderBoard();
+            updateGameUI();
+
+            // Ход ИИ, если следующий игрок — робот
+            if (state.mode === 'ai' && state.currentPlayer === 2 && !state.isGameOver) {
+                setTimeout(makeAiMove, 800);
+            }
+        }
+
+        // Простой интеллект бота
+        function makeAiMove() {
+            if (state.isGameOver) return;
+            const activeStones = state.stones.filter(s => s.active);
+            if (activeStones.length === 0) return;
+
+            let move = [];
+            // Пытаемся взять 2 соседних, если можно, или 1
+            if (activeStones.length >= 2 && Math.random() > 0.3) {
+                move = [activeStones[0].id, activeStones[1].id];
+            } else {
+                move = [activeStones[0].id];
+            }
+
+            executeMove(move);
+        }
+
+        function endGame(lastPlayer) {
+            state.isGameOver = true;
+            const t = i18n[currentLang];
+            let winner = lastPlayer;
+
+            // Если правила Мизер, победитель меняется (последний проиграл)
+            if (state.rules === 'misere') {
+                winner = lastPlayer === 1 ? 2 : 1; // упрощенно для 2 игроков
+            }
+
+            const winnerName = (state.mode === 'ai' && winner === 2) ? t.robot : `${t.turn.toLowerCase()} ${winner}`;
+            $('winnerText').innerText = `${winnerName} ${t.win}`;
+            $('winModal').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
+
