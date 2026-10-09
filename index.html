@@ -1,427 +1,981 @@
 <!DOCTYPE html>
 <html lang="ru" class="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kayles • Zen Edition</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
-                    colors: {
-                        zen: {
-                            50: '#fcfbf9', 100: '#f5f3ef', 200: '#e8e4dc',
-                            300: '#d4cbb8', 600: '#8c7a6b', 800: '#4a4036', 900: '#2b241d'
-                        }
-                    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kayles • Zen Edition</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+    darkMode: 'class',
+    theme: {
+        extend: {
+            fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+            colors: {
+                zen: {
+                    50:'#fcfbf9', 100:'#f5f3ef', 200:'#e8e4dc', 300:'#d4cbb8',
+                    400:'#b8a78e', 600:'#8c7a6b', 700:'#5f5449', 800:'#4a4036', 900:'#2b241d'
                 }
+            },
+            keyframes: {
+                float:{'0%,100%':{transform:'translateY(0)'},'50%':{transform:'translateY(-6px)'}},
+                pop:{'0%':{transform:'scale(0.7)',opacity:'0'},'100%':{transform:'scale(1)',opacity:'1'}},
+                shake:{'0%,100%':{transform:'translateX(0)'},'25%':{transform:'translateX(-5px)'},'75%':{transform:'translateX(5px)'}},
+                glow:{'0%,100%':{boxShadow:'0 0 0 0 rgba(217,119,6,0.4)'},'50%':{boxShadow:'0 0 0 8px rgba(217,119,6,0)'}}
+            },
+            animation: {
+                float:'float 4s ease-in-out infinite',
+                pop:'pop 0.3s ease-out',
+                shake:'shake 0.3s ease-in-out',
+                glow:'glow 2s ease-in-out infinite'
             }
         }
-    </script>
-    <style>
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-        .animate-float { animation: float 4s ease-in-out infinite; }
-        .glass { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(16px); }
-        .dark .glass { background: rgba(24, 24, 27, 0.75); backdrop-filter: blur(16px); }
-    </style>
+    }
+}
+</script>
+<style>
+.glass { background: rgba(255,255,255,0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+.dark .glass { background: rgba(24,24,27,0.75); }
+.glass-strong { background: rgba(255,255,255,0.9); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+.dark .glass-strong { background: rgba(24,24,27,0.9); }
+.tab-active { color:#d97706; border-color:#d97706; }
+.dark .tab-active { color:#fbbf24; border-color:#fbbf24; }
+/* Hide scrollbar visually but keep scroll */
+.no-scrollbar::-webkit-scrollbar { display:none; }
+.no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
+input[type=range] { -webkit-appearance:none; height:6px; background:transparent; border-radius:9999px; }
+input[type=range]::-webkit-slider-runnable-track { height:6px; border-radius:9999px; background:linear-gradient(to right,#d97706 var(--p,50%),#e8e4dc var(--p,50%)); }
+.dark input[type=range]::-webkit-slider-runnable-track { background:linear-gradient(to right,#fbbf24 var(--p,50%),#3f3f46 var(--p,50%)); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:20px; height:20px; margin-top:-7px; border-radius:9999px; background:#fff; border:3px solid #d97706; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.15); transition:transform 0.15s; }
+input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.15); }
+.dark input[type=range]::-webkit-slider-thumb { border-color:#fbbf24; background:#18181b; }
+</style>
 </head>
-<body class="bg-gradient-to-br from-zen-50 via-zen-100 to-zen-200 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 text-zen-800 dark:text-zen-100 min-h-screen flex flex-col justify-between selection:bg-amber-500/20 transition-colors duration-500">
+<body class="bg-gradient-to-br from-zen-50 via-zen-100 to-zen-200 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 text-zen-800 dark:text-zen-100 min-h-screen flex flex-col selection:bg-amber-500/20 transition-colors duration-500">
 
-    <header class="w-full max-w-5xl mx-auto p-6 flex justify-between items-center">
-        <div class="flex items-center space-x-3 cursor-pointer" onclick="switchScreen('menu')">
-            <div class="w-10 h-10 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 flex items-center justify-center border border-amber-500/30">
-                <span class="text-amber-600 dark:text-amber-400 font-bold text-lg">K</span>
+<!-- ХЭДЕР -->
+<header class="w-full border-b border-zen-200/60 dark:border-zinc-800/60 backdrop-blur-sm sticky top-0 z-40 bg-white/40 dark:bg-zinc-950/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
+        <button onclick="switchTab('play')" class="flex items-center space-x-3 group">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-600/30 group-hover:scale-105 transition">
+                <span class="text-white font-extrabold text-lg">K</span>
             </div>
-            <div>
-                <h1 class="font-bold text-lg tracking-wide">Kayles</h1>
-                <p class="text-xs text-zen-600 dark:text-zinc-400" data-i18n="subtitle">Zen Minimalist Edition</p>
+            <div class="text-left">
+                <h1 class="font-extrabold text-base tracking-tight">Kayles</h1>
+                <p class="text-[10px] uppercase tracking-widest text-zen-600 dark:text-zinc-400 font-semibold" data-i18n="subtitle">Zen Edition</p>
             </div>
-        </div>
-        <div class="flex items-center space-x-3">
-            <select id="langSelect" onchange="changeLang(this.value)" class="bg-white/50 dark:bg-zinc-800/50 border border-zen-200 dark:border-zinc-700 rounded-xl px-3 py-1.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition">
-                <option value="ru">RU</option>
-                <option value="en">EN</option>
-                <option value="es">ES</option>
-                <option value="de">DE</option>
-                <option value="zh">ZH</option>
+        </button>
+        <div class="flex items-center space-x-2">
+            <select id="langSelect" onchange="changeLang(this.value)" class="bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition cursor-pointer">
+                <option value="ru">🇷🇺 RU</option>
+                <option value="en">🇬🇧 EN</option>
+                <option value="es">🇪🇸 ES</option>
+                <option value="de">🇩🇪 DE</option>
+                <option value="zh">🇨🇳 ZH</option>
             </select>
-            <button onclick="toggleDarkMode()" class="w-9 h-9 rounded-xl bg-white/50 dark:bg-zinc-800/50 border border-zen-200 dark:border-zinc-700 flex items-center justify-center hover:scale-105 transition">
+            <button onclick="toggleDarkMode()" aria-label="theme" class="w-10 h-10 rounded-xl bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 flex items-center justify-center hover:scale-105 hover:border-amber-500/50 transition">
                 <svg id="themeIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             </button>
         </div>
-    </header>
+    </div>
+</header>
 
-    <main class="w-full max-w-4xl mx-auto p-4 flex-1 flex flex-col items-center justify-center">
+<!-- ОСНОВНОЙ КОНТЕНТ -->
+<main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6">
 
-        <!-- МЕНЮ -->
-        <div id="menuScreen" class="w-full max-w-md glass p-8 rounded-3xl shadow-2xl border border-white/40 dark:border-zinc-800 space-y-6">
+    <!-- ВКЛАДКИ -->
+    <div class="flex items-center gap-1 border-b border-zen-200 dark:border-zinc-800 mb-6 overflow-x-auto no-scrollbar">
+        <button data-tab="play" class="tab-btn tab-active px-5 py-3 text-sm font-bold border-b-2 border-transparent hover:text-amber-600 dark:hover:text-amber-400 transition flex items-center gap-2 whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span data-i18n="tabPlay">Игра</span>
+        </button>
+        <button data-tab="rules" class="tab-btn px-5 py-3 text-sm font-bold border-b-2 border-transparent hover:text-amber-600 dark:hover:text-amber-400 transition flex items-center gap-2 whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            <span data-i18n="tabRules">Правила</span>
+        </button>
+        <button data-tab="history" class="tab-btn px-5 py-3 text-sm font-bold border-b-2 border-transparent hover:text-amber-600 dark:hover:text-amber-400 transition flex items-center gap-2 whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span data-i18n="tabHistory">История</span>
+            <span id="historyBadge" class="hidden ml-1 px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-400 text-[10px] font-bold">0</span>
+        </button>
+    </div>
+
+    <!-- ============ ВКЛАДКА: ИГРА ============ -->
+    <div id="tab-play" class="tab-content">
+        <div class="grid lg:grid-cols-[380px,1fr] gap-6">
+
+            <!-- ЛЕВАЯ КОЛОНКА: НАСТРОЙКИ -->
+            <aside id="settingsPanel" class="space-y-5">
+                <div class="glass rounded-3xl border border-white/40 dark:border-zinc-800 shadow-xl p-6 space-y-6">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-extrabold tracking-tight" data-i18n="settingsTitle">Настройки</h2>
+                            <span class="text-[10px] px-2 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold uppercase tracking-wider" data-i18n="beforeStart">до старта</span>
+                        </div>
+
+                        <!-- Игроки -->
+                        <div class="space-y-2 mb-5">
+                            <label class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="playersLabel">Режим</label>
+                            <div class="grid grid-cols-5 gap-1.5" id="playersBtns">
+                                <button data-mode="ai"    data-players="2" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">AI</button>
+                                <button data-mode="human" data-players="2" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">2P</button>
+                                <button data-mode="human" data-players="3" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">3P</button>
+                                <button data-mode="human" data-players="4" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">4P</button>
+                                <button data-mode="human" data-players="6" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">6P</button>
+                            </div>
+                        </div>
+
+                        <!-- Раскладка -->
+                        <div class="space-y-2 mb-5">
+                            <label class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="layoutLabel">Раскладка</label>
+                            <div class="grid grid-cols-2 gap-2" id="layoutBtns">
+                                <button data-val="circle" class="layout-btn p-3 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-xs font-bold transition hover:border-amber-500/50 flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
+                                    <span data-i18n="layoutCircle">Круг</span>
+                                </button>
+                                <button data-val="row" class="layout-btn p-3 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-xs font-bold transition hover:border-amber-500/50 flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" d="M4 12h16"/></svg>
+                                    <span data-i18n="layoutRow">Ряд</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Условие победы -->
+                        <div class="space-y-2 mb-5">
+                            <label class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="winLabel">Победа</label>
+                            <div class="space-y-2" id="winBtns">
+                                <button data-val="normal" class="win-btn w-full p-3 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-xs font-bold transition hover:border-amber-500/50 text-left flex items-center gap-3">
+                                    <div class="w-4 h-4 rounded-full border-2 border-zen-300 dark:border-zinc-600 radio-dot shrink-0"></div>
+                                    <div class="flex-1">
+                                        <div data-i18n="winNormal">Нормальное</div>
+                                        <div class="text-[10px] font-normal text-zen-600 dark:text-zinc-400 mt-0.5" data-i18n="winNormalHint">Взял последний — победил</div>
+                                    </div>
+                                </button>
+                                <button data-val="misere" class="win-btn w-full p-3 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-xs font-bold transition hover:border-amber-500/50 text-left flex items-center gap-3">
+                                    <div class="w-4 h-4 rounded-full border-2 border-zen-300 dark:border-zinc-600 radio-dot shrink-0"></div>
+                                    <div class="flex-1">
+                                        <div data-i18n="winMisere">Мизер</div>
+                                        <div class="text-[10px] font-normal text-zen-600 dark:text-zinc-400 mt-0.5" data-i18n="winMisereHint">Взял последний — проиграл</div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Камни -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-baseline">
+                                <label class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="stonesLabel">Камней</label>
+                                <span class="text-lg font-extrabold text-amber-600 dark:text-amber-400" id="stonesVal">12</span>
+                            </div>
+                            <input type="range" id="stonesRange" min="6" max="20" value="12" class="w-full cursor-pointer">
+                            <div class="flex justify-between text-[10px] text-zen-600 dark:text-zinc-500 font-semibold">
+                                <span>6</span><span>20</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="startGame()" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold shadow-lg shadow-amber-600/30 active:scale-[0.98] transition flex items-center justify-center gap-2 text-base">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span data-i18n="startBtn">Начать игру</span>
+                    </button>
+                </div>
+
+                <!-- Мини-превью -->
+                <div class="glass rounded-3xl border border-white/40 dark:border-zinc-800 shadow-xl p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-zen-600 dark:text-zinc-400" data-i18n="preview">Превью</h3>
+                        <span class="text-[10px] font-bold text-amber-600 dark:text-amber-400" id="previewCount">12</span>
+                    </div>
+                    <div id="previewBoard" class="min-h-[140px] flex items-center justify-center"></div>
+                </div>
+            </aside>
+
+            <!-- ПРАВАЯ КОЛОНКА: ИГРОВОЕ ПОЛЕ -->
+            <section class="space-y-5">
+
+                <!-- Панель статуса -->
+                <div class="glass rounded-3xl border border-white/40 dark:border-zinc-800 shadow-xl p-5">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div id="playerBadge" class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-600/30 text-white font-extrabold text-xl animate-glow">
+                                P1
+                            </div>
+                            <div>
+                                <div class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="turnTitle">Ход игрока</div>
+                                <div id="turnIndicator" class="text-xl font-extrabold">Игрок 1</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 sm:gap-6">
+                            <div class="text-right">
+                                <div class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="remaining">Осталось</div>
+                                <div class="text-xl font-extrabold text-amber-600 dark:text-amber-400"><span id="stonesLeft">12</span> <span class="text-xs font-semibold text-zen-600 dark:text-zinc-400">камней</span></div>
+                            </div>
+                            <div class="w-px h-10 bg-zen-200 dark:bg-zinc-700 hidden sm:block"></div>
+                            <div class="text-right">
+                                <div class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="selected">Выбрано</div>
+                                <div id="selectedCount" class="text-xl font-extrabold">0<span class="text-xs font-semibold text-zen-600 dark:text-zinc-400">/2</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Прогресс -->
+                    <div class="mt-4 h-1.5 rounded-full bg-zen-200 dark:bg-zinc-800 overflow-hidden">
+                        <div id="progressBar" class="h-full bg-gradient-to-r from-amber-400 to-amber-600 transition-all duration-500" style="width:0%"></div>
+                    </div>
+                </div>
+
+                <!-- Игровое поле -->
+                <div id="boardContainer" class="glass rounded-3xl border border-white/40 dark:border-zinc-800 shadow-xl min-h-[420px] flex items-center justify-center relative p-6 overflow-hidden"></div>
+
+                <!-- Подсказка / панель действий -->
+                <div class="glass rounded-3xl border border-white/40 dark:border-zinc-800 shadow-xl p-4 space-y-3">
+                    <div id="hintText" class="text-xs font-semibold text-center text-zen-600 dark:text-zinc-400 min-h-[16px]">Нажмите на камень, чтобы начать</div>
+                    <div class="flex items-center gap-2 flex-wrap justify-center">
+                        <button onclick="clearSelection()" id="clearBtn" class="px-4 py-2.5 rounded-xl bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 text-xs font-bold hover:border-amber-500/50 transition disabled:opacity-40">
+                            <span data-i18n="clearBtn">Сбросить</span>
+                        </button>
+                        <button onclick="confirmMove()" id="confirmBtn" disabled class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold shadow-lg shadow-amber-600/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none active:scale-[0.98] transition flex items-center gap-2 text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                            <span data-i18n="confirmBtn">Подтвердить</span>
+                        </button>
+                        <button onclick="switchTab('play'); switchScreen('menu')" id="exitBtn" class="px-4 py-2.5 rounded-xl bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 text-xs font-bold hover:border-red-400/50 hover:text-red-500 transition">
+                            <span data-i18n="exitBtn">Сдаться</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- ============ ВКЛАДКА: ПРАВИЛА ============ -->
+    <div id="tab-rules" class="tab-content hidden max-w-3xl mx-auto">
+        <div class="glass rounded-3xl border border-white/40 dark:border-zinc-800 shadow-xl p-8 space-y-6">
             <div class="text-center space-y-2">
-                <h2 class="text-2xl font-bold tracking-tight" data-i18n="menuTitle">Настройки игры</h2>
-                <p class="text-sm text-zen-600 dark:text-zinc-400" data-i18n="menuDesc">Выберите параметры для медитативной сессии</p>
+                <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                </div>
+                <h2 class="text-2xl font-extrabold" data-i18n="rulesTitle">Правила игры Kayles</h2>
+                <p class="text-sm text-zen-600 dark:text-zinc-400" data-i18n="rulesSubtitle">Классическая игра на вынимание камней</p>
             </div>
 
-            <div class="space-y-4 text-sm">
-                <div>
-                    <label class="block font-medium mb-1.5 text-xs uppercase tracking-wider text-zen-600 dark:text-zinc-400" data-i18n="playersLabel">Игроки</label>
-                    <div class="grid grid-cols-5 gap-2" id="playersBtns">
-                        <button data-mode="ai"     data-players="2" class="p-2.5 rounded-xl border font-semibold transition player-btn active">1 vs AI</button>
-                        <button data-mode="human"  data-players="2" class="p-2.5 rounded-xl border font-semibold transition player-btn">2P</button>
-                        <button data-mode="human"  data-players="3" class="p-2.5 rounded-xl border font-semibold transition player-btn">3</button>
-                        <button data-mode="human"  data-players="4" class="p-2.5 rounded-xl border font-semibold transition player-btn">4</button>
-                        <button data-mode="human"  data-players="6" class="p-2.5 rounded-xl border font-semibold transition player-btn">6</button>
+            <div class="space-y-4 text-sm leading-relaxed">
+                <div class="rounded-2xl bg-amber-500/5 border border-amber-500/20 p-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-400 flex items-center justify-center font-extrabold text-xs shrink-0">1</div>
+                        <div>
+                            <div class="font-bold mb-1" data-i18n="rule1Title">Как ходить</div>
+                            <div class="text-zen-700 dark:text-zinc-300" data-i18n="rule1Desc">За ход можно взять ОДИН камень или ДВА СОСЕДНИХ камня. Соседними считаются камни, стоящие рядом без промежутков.</div>
+                        </div>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block font-medium mb-1.5 text-xs uppercase tracking-wider text-zen-600 dark:text-zinc-400" data-i18n="layoutLabel">Расположение</label>
-                    <div class="grid grid-cols-2 gap-2" id="layoutBtns">
-                        <button data-val="circle" class="p-3 rounded-xl border font-medium transition layout-btn active" data-i18n="layoutCircle">Окружность</button>
-                        <button data-val="row" class="p-3 rounded-xl border font-medium transition layout-btn" data-i18n="layoutRow">Линия (Ряд)</button>
+                <div class="rounded-2xl bg-amber-500/5 border border-amber-500/20 p-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-400 flex items-center justify-center font-extrabold text-xs shrink-0">2</div>
+                        <div>
+                            <div class="font-bold mb-1" data-i18n="rule2Title">Соседство</div>
+                            <div class="text-zen-700 dark:text-zinc-300" data-i18n="rule2Desc">Между выбранными камнями не должно быть других активных камней. В круговой раскладке первый и последний камни тоже считаются соседями.</div>
+                        </div>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block font-medium mb-1.5 text-xs uppercase tracking-wider text-zen-600 dark:text-zinc-400" data-i18n="winLabel">Условие победы</label>
-                    <div class="grid grid-cols-2 gap-2" id="winBtns">
-                        <button data-val="normal" class="p-3 rounded-xl border font-medium transition win-btn active" data-i18n="winNormal">Нормальное</button>
-                        <button data-val="misere" class="p-3 rounded-xl border font-medium transition win-btn" data-i18n="winMisere">Мизер</button>
+                <div class="rounded-2xl bg-amber-500/5 border border-amber-500/20 p-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-400 flex items-center justify-center font-extrabold text-xs shrink-0">3</div>
+                        <div>
+                            <div class="font-bold mb-1" data-i18n="rule3Title">Победа</div>
+                            <div class="text-zen-700 dark:text-zinc-300" data-i18n="rule3Desc">В Нормальном режиме победил тот, кто взял последний камень. В Мизере — тот, кто взял последний, проигрывает.</div>
+                        </div>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block font-medium mb-1.5 text-xs uppercase tracking-wider text-zen-600 dark:text-zinc-400" data-i18n="stonesLabel">Количество камней (6–20)</label>
-                    <input type="range" id="stonesRange" min="6" max="20" value="12" oninput="document.getElementById('stonesVal').innerText = this.value" class="w-full accent-amber-600 cursor-pointer">
-                    <div class="text-center font-bold text-amber-600 mt-1" id="stonesVal">12</div>
+                <div class="rounded-2xl bg-amber-500/5 border border-amber-500/20 p-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-400 flex items-center justify-center font-extrabold text-xs shrink-0">4</div>
+                        <div>
+                            <div class="font-bold mb-1" data-i18n="rule4Title">Тактика</div>
+                            <div class="text-zen-700 dark:text-zinc-300" data-i18n="rule4Desc">Играйте так, чтобы после вашего хода осталось чётное число одиночных камней и пар — это даёт преимущество.</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <button onclick="startGame()" class="w-full py-4 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-semibold shadow-lg shadow-amber-600/20 active:scale-[0.98] transition" data-i18n="startBtn">Начать игру</button>
         </div>
+    </div>
 
-        <!-- ИГРОВОЙ ЭКРАН -->
-        <div id="gameScreen" class="w-full hidden flex flex-col items-center space-y-6">
-            <div class="glass w-full max-w-lg p-4 rounded-2xl flex justify-between items-center border border-white/40 dark:border-zinc-800 shadow-lg">
-                <div>
-                    <span class="text-xs text-zen-600 dark:text-zinc-400 uppercase tracking-wider" data-i18n="turnTitle">Ход игрока</span>
-                    <h3 id="turnIndicator" class="font-bold text-lg text-amber-600 dark:text-amber-400">Игрок 1</h3>
-                </div>
-                <div class="text-right">
-                    <span class="text-xs text-zen-600 dark:text-zinc-400 uppercase tracking-wider" data-i18n="ruleTitle">Правило</span>
-                    <p id="ruleIndicator" class="text-xs font-semibold">1 или 2 соседних</p>
-                </div>
+    <!-- ============ ВКЛАДКА: ИСТОРИЯ ============ -->
+    <div id="tab-history" class="tab-content hidden max-w-3xl mx-auto">
+        <div class="glass rounded-3xl border border-white/40 dark:border-zinc-800 shadow-xl p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-extrabold" data-i18n="historyTitle">История ходов</h2>
+                <button onclick="clearHistory()" class="text-xs font-bold text-red-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-500/10 transition" data-i18n="clearHistory">Очистить</button>
             </div>
-
-            <div id="boardContainer" class="w-full min-h-[380px] flex items-center justify-center relative p-6"></div>
-
-            <div class="flex items-center space-x-4">
-                <button onclick="confirmMove()" id="confirmBtn" disabled class="px-8 py-3.5 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-semibold shadow-lg shadow-amber-600/20 disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98] transition flex items-center space-x-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                    <span data-i18n="confirmBtn">Подтвердить ход</span>
-                </button>
-                <button onclick="switchScreen('menu')" class="px-5 py-3.5 rounded-2xl glass border border-zen-200 dark:border-zinc-700 text-xs font-semibold hover:bg-zen-200/50 transition" data-i18n="menuBtn">В меню</button>
+            <div id="historyList" class="space-y-2 max-h-[500px] overflow-y-auto">
+                <div class="text-center text-sm text-zen-600 dark:text-zinc-500 py-12" data-i18n="historyEmpty">История пуста. Сыграйте партию!</div>
             </div>
         </div>
+    </div>
 
-        <!-- ЭКРАН ПОБЕДЫ -->
-        <div id="victoryScreen" class="w-full max-w-md glass p-8 rounded-3xl shadow-2xl border border-white/40 dark:border-zinc-800 text-center space-y-6 hidden">
-            <div class="w-16 h-16 bg-amber-500/10 rounded-3xl mx-auto flex items-center justify-center text-amber-600 text-2xl font-bold border border-amber-500/30 animate-float">🏆</div>
-            <div class="space-y-2">
-                <h2 id="winnerText" class="text-3xl font-bold">Победа!</h2>
-                <p class="text-sm text-zen-600 dark:text-zinc-400" data-i18n="victoryDesc">Игра завершена. Прекрасная стратегия.</p>
+</main>
+
+<!-- ЭКРАН ПОБЕДЫ (overlay) -->
+<div id="victoryOverlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+    <div class="glass-strong rounded-3xl border border-white/60 dark:border-zinc-700 shadow-2xl p-8 max-w-md w-full text-center space-y-6 animate-pop">
+        <div class="w-20 h-20 bg-gradient-to-br from-amber-400 to-amber-600 rounded-3xl mx-auto flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-amber-600/40 animate-float" id="victoryIcon">🏆</div>
+        <div class="space-y-2">
+            <h2 id="winnerText" class="text-3xl font-extrabold">Победа!</h2>
+            <p class="text-sm text-zen-600 dark:text-zinc-400" data-i18n="victoryDesc">Игра завершена. Прекрасная стратегия.</p>
+        </div>
+        <div id="victoryStats" class="grid grid-cols-2 gap-3 text-sm">
+            <div class="rounded-2xl bg-amber-500/5 border border-amber-500/20 p-3">
+                <div class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="statMoves">Ходов</div>
+                <div id="statMoves" class="text-xl font-extrabold text-amber-600 dark:text-amber-400">0</div>
             </div>
-            <div class="flex space-x-3">
-                <button onclick="startGame()" class="flex-1 py-3.5 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-semibold shadow-lg transition" data-i18n="restartBtn">Ещё раз</button>
-                <button onclick="switchScreen('menu')" class="flex-1 py-3.5 rounded-2xl glass border border-zen-200 dark:border-zinc-700 font-semibold transition" data-i18n="menuBtn">В меню</button>
+            <div class="rounded-2xl bg-amber-500/5 border border-amber-500/20 p-3">
+                <div class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="statStones">Взято</div>
+                <div id="statStones" class="text-xl font-extrabold text-amber-600 dark:text-amber-400">0</div>
             </div>
         </div>
+        <div class="flex gap-3">
+            <button onclick="closeVictory(); startGame()" class="flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold shadow-lg transition" data-i18n="restartBtn">Ещё раз</button>
+            <button onclick="closeVictory(); switchScreen('menu')" class="flex-1 py-3.5 rounded-2xl bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 font-bold transition hover:border-amber-500/50" data-i18n="toMenuBtn">В меню</button>
+        </div>
+    </div>
+</div>
 
-    </main>
+<footer class="w-full text-center p-6 text-xs text-zen-600 dark:text-zinc-500 font-semibold">
+    Kayles • Zen Edition © 2025
+</footer>
 
-    <footer class="w-full text-center p-6 text-xs text-zen-600 dark:text-zinc-500">
-        Kayles Game • Zen Minimalist Edition
-    </footer>
+<script>
+/* ============ ЛОКАЛИЗАЦИЯ ============ */
+const i18n = {
+    ru: {
+        subtitle:"Zen Edition", tabPlay:"Игра", tabRules:"Правила", tabHistory:"История",
+        settingsTitle:"Настройки", beforeStart:"до старта", playersLabel:"Режим", layoutLabel:"Раскладка",
+        layoutCircle:"Круг", layoutRow:"Ряд", winLabel:"Победа",
+        winNormal:"Нормальное", winNormalHint:"Взял последний — победил",
+        winMisere:"Мизер", winMisereHint:"Взял последний — проиграл",
+        stonesLabel:"Камней", startBtn:"Начать игру", preview:"Превью",
+        turnTitle:"Ход игрока", remaining:"Осталось", selected:"Выбрано",
+        clearBtn:"Сбросить", confirmBtn:"Подтвердить", exitBtn:"Сдаться",
+        rulesTitle:"Правила игры Kayles", rulesSubtitle:"Классическая игра на вынимание камней",
+        rule1Title:"Как ходить", rule1Desc:"За ход можно взять ОДИН камень или ДВА СОСЕДНИХ камня. Соседними считаются камни, стоящие рядом без промежутков.",
+        rule2Title:"Соседство", rule2Desc:"Между выбранными камнями не должно быть других активных камней. В круговой раскладке первый и последний камни тоже считаются соседями.",
+        rule3Title:"Победа", rule3Desc:"В Нормальном режиме победил тот, кто взял последний камень. В Мизере — тот, кто взял последний, проигрывает.",
+        rule4Title:"Тактика", rule4Desc:"Играйте так, чтобы после вашего хода осталось чётное число одиночных камней и пар — это даёт преимущество.",
+        historyTitle:"История ходов", clearHistory:"Очистить", historyEmpty:"История пуста. Сыграйте партию!",
+        victoryDesc:"Игра завершена. Прекрасная стратегия.", restartBtn:"Ещё раз", toMenuBtn:"В меню",
+        statMoves:"Ходов", statStones:"Взято",
+        player:"Игрок", ai:"ИИ",
+        hintStart:"Нажмите на камень, чтобы начать",
+        hintSelected1:"Выбран 1 камень. Выберите соседний или подтвердите ход.",
+        hintSelected2:"Выбрано 2 соседних камня. Подтвердите ход.",
+        hintCantSelect:"Эти камни не соседние — выберите другой.",
+        hintAITurn:"ИИ думает…",
+        stonesWord:"камней",
+        moveTaken:"взял", stoneWord:"камень"
+    },
+    en: {
+        subtitle:"Zen Edition", tabPlay:"Play", tabRules:"Rules", tabHistory:"History",
+        settingsTitle:"Settings", beforeStart:"pre-game", playersLabel:"Mode", layoutLabel:"Layout",
+        layoutCircle:"Circle", layoutRow:"Row", winLabel:"Win",
+        winNormal:"Normal", winNormalHint:"Take last — win",
+        winMisere:"Misère", winMisereHint:"Take last — lose",
+        stonesLabel:"Stones", startBtn:"Start Game", preview:"Preview",
+        turnTitle:"Turn", remaining:"Left", selected:"Selected",
+        clearBtn:"Clear", confirmBtn:"Confirm", exitBtn:"Resign",
+        rulesTitle:"Kayles Game Rules", rulesSubtitle:"A classic stone-removal game",
+        rule1Title:"How to play", rule1Desc:"Each turn take ONE stone or TWO ADJACENT stones. Adjacent means side-by-side with no gaps.",
+        rule2Title:"Adjacency", rule2Desc:"No other active stones may sit between your picks. In circle layout, first and last stones are adjacent too.",
+        rule3Title:"Victory", rule3Desc:"In Normal mode, the player who takes the last stone wins. In Misère, the one who takes the last stone loses.",
+        rule4Title:"Tactics", rule4Desc:"Try to leave an even number of singletons and pairs after your move — that grants an advantage.",
+        historyTitle:"Move History", clearHistory:"Clear", historyEmpty:"No history yet. Play a game!",
+        victoryDesc:"Game over. Brilliant strategy.", restartBtn:"Play Again", toMenuBtn:"Menu",
+        statMoves:"Moves", statStones:"Taken",
+        player:"Player", ai:"AI",
+        hintStart:"Tap a stone to begin",
+        hintSelected1:"1 stone selected. Choose an adjacent or confirm.",
+        hintSelected2:"2 adjacent stones selected. Confirm your move.",
+        hintCantSelect:"Not adjacent — choose another.",
+        hintAITurn:"AI is thinking…",
+        stonesWord:"stones",
+        moveTaken:"took", stoneWord:"stone"
+    },
+    es: {
+        subtitle:"Zen Edition", tabPlay:"Jugar", tabRules:"Reglas", tabHistory:"Historial",
+        settingsTitle:"Ajustes", beforeStart:"pre-juego", playersLabel:"Modo", layoutLabel:"Diseño",
+        layoutCircle:"Círculo", layoutRow:"Fila", winLabel:"Victoria",
+        winNormal:"Normal", winNormalHint:"Último en tomar — gana",
+        winMisere:"Misère", winMisereHint:"Último en tomar — pierde",
+        stonesLabel:"Piedras", startBtn:"Empezar", preview:"Vista",
+        turnTitle:"Turno", remaining:"Quedan", selected:"Elegidas",
+        clearBtn:"Limpiar", confirmBtn:"Confirmar", exitBtn:"Rendirse",
+        rulesTitle:"Reglas de Kayles", rulesSubtitle:"Un clásico juego de retirar piedras",
+        rule1Title:"Cómo jugar", rule1Desc:"En cada turno toma UNA piedra o DOS ADYACENTES. Adyacentes significa lado a lado sin huecos.",
+        rule2Title:"Adyacencia", rule2Desc:"No debe haber piedras activas entre las elegidas. En círculo, la primera y la última también son adyacentes.",
+        rule3Title:"Victoria", rule3Desc:"En modo Normal gana quien toma la última. En Misère, quien toma la última pierde.",
+        rule4Title:"Táctica", rule4Desc:"Intenta dejar un número par de singletons y pares tras tu jugada.",
+        historyTitle:"Historial de movimientos", clearHistory:"Limpiar", historyEmpty:"Sin historial. ¡Juega una partida!",
+        victoryDesc:"Juego terminado. Excelente estrategia.", restartBtn:"Otra vez", toMenuBtn:"Menú",
+        statMoves:"Movimientos", statStones:"Tomadas",
+        player:"Jugador", ai:"IA",
+        hintStart:"Toca una piedra para empezar",
+        hintSelected1:"1 piedra elegida. Elige adyacente o confirma.",
+        hintSelected2:"2 piedras adyacentes. Confirma tu jugada.",
+        hintCantSelect:"No son adyacentes — elige otra.",
+        hintAITurn:"La IA está pensando…",
+        stonesWord:"piedras",
+        moveTaken:"tomó", stoneWord:"piedra"
+    },
+    de: {
+        subtitle:"Zen Edition", tabPlay:"Spielen", tabRules:"Regeln", tabHistory:"Verlauf",
+        settingsTitle:"Einstellungen", beforeStart:"vor Start", playersLabel:"Modus", layoutLabel:"Layout",
+        layoutCircle:"Kreis", layoutRow:"Reihe", winLabel:"Sieg",
+        winNormal:"Normal", winNormalHint:"Letzter Zug — Sieg",
+        winMisere:"Misère", winMisereHint:"Letzter Zug — Niederlage",
+        stonesLabel:"Steine", startBtn:"Spiel starten", preview:"Vorschau",
+        turnTitle:"Am Zug", remaining:"Übrig", selected:"Gewählt",
+        clearBtn:"Zurücksetzen", confirmBtn:"Bestätigen", exitBtn:"Aufgeben",
+        rulesTitle:"Kayles Spielregeln", rulesSubtitle:"Ein klassisches Steinspiel",
+        rule1Title:"Spielzug", rule1Desc:"Pro Zug EINEN Stein oder ZWEI BENACHBARTE nehmen. Benachbart heißt direkt nebeneinander.",
+        rule2Title:"Nachbarschaft", rule2Desc:"Zwischen den gewählten Steinen dürfen keine anderen aktiven liegen. Im Kreis sind erster und letzter benachbart.",
+        rule3Title:"Sieg", rule3Desc:"Im Normal-Modus gewinnt, wer den letzten Stein nimmt. Bei Misère verliert dieser Spieler.",
+        rule4Title:"Taktik", rule4Desc:"Hinterlasse nach dem Zug eine gerade Anzahl von Einzelnen und Paaren.",
+        historyTitle:"Zugverlauf", clearHistory:"Löschen", historyEmpty:"Noch kein Verlauf. Spiele eine Partie!",
+        victoryDesc:"Spiel beendet. Brillante Strategie.", restartBtn:"Nochmal", toMenuBtn:"Menü",
+        statMoves:"Züge", statStones:"Genommen",
+        player:"Spieler", ai:"KI",
+        hintStart:"Tippe auf einen Stein",
+        hintSelected1:"1 Stein gewählt. Wähle Nachbarn oder bestätige.",
+        hintSelected2:"2 benachbarte Steine. Bestätige den Zug.",
+        hintCantSelect:"Nicht benachbart — wähle anders.",
+        hintAITurn:"KI denkt…",
+        stonesWord:"Steine",
+        moveTaken:"nahm", stoneWord:"Stein"
+    },
+    zh: {
+        subtitle:"禅意版", tabPlay:"游戏", tabRules:"规则", tabHistory:"历史",
+        settingsTitle:"设置", beforeStart:"开始前", playersLabel:"模式", layoutLabel:"布局",
+        layoutCircle:"环形", layoutRow:"直线", winLabel:"胜负",
+        winNormal:"常规", winNormalHint:"取最后一子者胜",
+        winMisere:"反常", winMisereHint:"取最后一子者负",
+        stonesLabel:"石子数", startBtn:"开始游戏", preview:"预览",
+        turnTitle:"当前回合", remaining:"剩余", selected:"已选",
+        clearBtn:"重置", confirmBtn:"确认", exitBtn:"认输",
+        rulesTitle:"Kayles 游戏规则", rulesSubtitle:"经典取子游戏",
+        rule1Title:"如何行动", rule1Desc:"每回合取一子或两个相邻子。相邻指紧挨着无空隙。",
+        rule2Title:"相邻", rule2Desc:"两子之间不能有其它活动子。环形布局中，首尾也相邻。",
+        rule3Title:"胜负", rule3Desc:"常规模式下，取最后一子者胜；反常模式下取最后一子者负。",
+        rule4Title:"策略", rule4Desc:"尽量让落子后剩余的单子和对子数保持偶数。",
+        historyTitle:"行动历史", clearHistory:"清空", historyEmpty:"暂无历史。开始一局吧！",
+        victoryDesc:"游戏结束。精妙的策略。", restartBtn:"再来一局", toMenuBtn:"返回菜单",
+        statMoves:"步数", statStones:"取子",
+        player:"玩家", ai:"AI",
+        hintStart:"点击石子开始",
+        hintSelected1:"已选1子。选择相邻子或确认。",
+        hintSelected2:"已选2个相邻子。请确认。",
+        hintCantSelect:"不相邻——请另选。",
+        hintAITurn:"AI 思考中……",
+        stonesWord:"石子",
+        moveTaken:"取了", stoneWord:"石子"
+    }
+};
 
-    <script>
-        // ЛОКАЛИЗАЦИЯ
-        const i18n = {
-            ru: { subtitle:"Zen Minimalist Edition", menuTitle:"Настройки игры", menuDesc:"Выберите параметры для медитативной сессии", playersLabel:"Режим игроков", layoutLabel:"Расположение камней", layoutCircle:"Окружность", layoutRow:"Линия (Ряд)", winLabel:"Условие победы", winNormal:"Нормальное (последний берет)", winMisere:"Мизер (последний проигрывает)", stonesLabel:"Количество камней", startBtn:"Начать игру", turnTitle:"Ход игрока", ruleTitle:"Правило", confirmBtn:"Подтвердить ход", menuBtn:"В меню", victoryDesc:"Игра завершена. Прекрасная стратегия.", restartBtn:"Играть снова", player:"Игрок", ai:"ИИ", selectPrompt:"Выберите 1 камень или 2 соседних" },
-            en: { subtitle:"Zen Minimalist Edition", menuTitle:"Game Settings", menuDesc:"Configure parameters for your meditative session", playersLabel:"Players Mode", layoutLabel:"Board Layout", layoutCircle:"Circle", layoutRow:"Row", winLabel:"Win Condition", winNormal:"Normal (last to move wins)", winMisere:"Misère (last to move loses)", stonesLabel:"Number of stones", startBtn:"Start Game", turnTitle:"Current Turn", ruleTitle:"Rule", confirmBtn:"Confirm Move", menuBtn:"Menu", victoryDesc:"Game over. Brilliant strategy.", restartBtn:"Play Again", player:"Player", ai:"AI", selectPrompt:"Select 1 stone or 2 adjacent" },
-            es: { subtitle:"Zen Minimalist Edition", menuTitle:"Ajustes del juego", menuDesc:"Configura los parámetros para tu sesión", playersLabel:"Modo de jugadores", layoutLabel:"Diseño del tablero", layoutCircle:"Círculo", layoutRow:"Fila", winLabel:"Condición de victoria", winNormal:"Normal (último en mover gana)", winMisere:"Misère (último en mover pierde)", stonesLabel:"Número de piedras", startBtn:"Empezar juego", turnTitle:"Turno actual", ruleTitle:"Regla", confirmBtn:"Confirmar movimiento", menuBtn:"Menú", victoryDesc:"Juego terminado. Excelente estrategia.", restartBtn:"Jugar de nuevo", player:"Jugador", ai:"IA", selectPrompt:"Selecciona 1 piedra o 2 adyacentes" },
-            de: { subtitle:"Zen Minimalist Edition", menuTitle:"Spieleinstellungen", menuDesc:"Konfigurieren Sie die Parameter", playersLabel:"Spielermodus", layoutLabel:"Spielfeld-Layout", layoutCircle:"Kreis", layoutRow:"Reihe", winLabel:"Gewinnbedingung", winNormal:"Normal (letzter Zug gewinnt)", winMisere:"Misère (letzter Zug verliert)", stonesLabel:"Anzahl der Steine", startBtn:"Spiel starten", turnTitle:"Aktueller Zug", ruleTitle:"Regel", confirmBtn:"Zug bestätigen", menuBtn:"Menü", victoryDesc:"Spiel beendet. Brillante Strategie.", restartBtn:"Nochmal spielen", player:"Spieler", ai:"KI", selectPrompt:"Wähle 1 Stein oder 2 benachbarte" },
-            zh: { subtitle:"Zen Minimalist Edition", menuTitle:"游戏设置", menuDesc:"配置您的禅意游戏体验", playersLabel:"玩家模式", layoutLabel:"棋盘布局", layoutCircle:"环形", layoutRow:"直线", winLabel:"胜利条件", winNormal:"常规 (最后拿取者胜)", winMisere:"反常 (最后拿取者负)", stonesLabel:"石块数量", startBtn:"开始游戏", turnTitle:"当前回合", ruleTitle:"规则", confirmBtn:"确认走子", menuBtn:"菜单", victoryDesc:"游戏结束。精妙的策略。", restartBtn:"再玩一次", player:"玩家", ai:"AI", selectPrompt:"选择1个或2个相邻石块" }
-        };
+let currentLang = 'ru';
 
-        let currentLang = 'ru';
+function t(key) { return (i18n[currentLang] && i18n[current Lang]) ? i18n[currentLang][key] : key; }
+// fix typo safety
+function tr(key) { return (i18n[currentLang] && i18n[currentLang][key]) || key; }
 
-        function changeLang(lang) {
-            currentLang = lang;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (i18n[lang] && i18n[lang][key]) el.innerText = i18n[lang][key];
-            });
-        }
+function changeLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18n[lang] && i18n[lang][key]) el.innerText = i18n[lang][key];
+    });
+    // Обновить динамические тексты
+    if (!game.started) updatePreview();
+    if (game.started && !game.ended) updateStatusTexts();
+    updateHistoryUI();
+}
 
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            document.getElementById('themeIcon').innerHTML = isDark
-                ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>'
-                : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>';
-        }
+/* ============ ТЕМА ============ */
+function toggleDarkMode() {
+    document.documentElement.classList.toggle('dark');
+    const isDark = document.documentElement.classList.contains('dark');
+    document.getElementById('themeIcon').innerHTML = isDark
+        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>'
+        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>';
+}
 
-        // СОСТОЯНИЕ ИГРЫ
-        const game = {
-            playersCount: 2,
-            isAI: true,
-            layout: 'circle',
-            winCondition: 'normal',
-            totalStones: 12,
-            stones: [],
-            currentPlayer: 0,
-            selected: [],
-            aiThinking: false
-        };
+/* ============ ВКЛАДКИ ============ */
+function switchTab(name) {
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('tab-' + name).classList.remove('hidden');
+    document.querySelectorAll('.tab-btn').forEach(b => {
+        if (b.dataset.tab === name) b.classList.add('tab-active');
+        else b.classList.remove('tab-active');
+    });
+    if (name === 'history') updateHistoryUI();
+}
 
-        // Инициализация кнопок игроков через data-атрибуты (без event!)
-        document.querySelectorAll('#playersBtns .player-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('#playersBtns .player-btn').forEach(b => b.classList.remove('border-amber-500', 'bg-amber-500/10', 'active'));
-                btn.classList.add('border-amber-500', 'bg-amber-500/10', 'active');
-                game.playersCount = parseInt(btn.dataset.players);
-                game.isAI = btn.dataset.mode === 'ai';
-            });
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+/* ============ СОСТОЯНИЕ ИГРЫ ============ */
+const game = {
+    playersCount: 2,
+    isAI: true,
+    layout: 'circle',
+    winCondition: 'normal',
+    totalStones: 12,
+    stones: [],
+    currentPlayer: 0,
+    selected: [],
+    aiThinking: false,
+    started: false,
+    ended: false,
+    history: [],
+    moveCount: 0,
+    stonesTaken: 0
+};
+
+/* ============ UI КНОПОК НАСТРОЕК ============ */
+function activate(selector, el) {
+    document.querySelectorAll(selector).forEach(b => {
+        b.classList.remove('border-amber-500','bg-amber-500/10','text-amber-700','dark:text-amber-400');
+    });
+    el.classList.add('border-amber-500','bg-amber-500/10','text-amber-700','dark:text-amber-400');
+}
+
+document.querySelectorAll('#playersBtns .player-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (game.started) return;
+        activate('#playersBtns .player-btn', btn);
+        game.playersCount = parseInt(btn.dataset.players);
+        game.isAI = btn.dataset.mode === 'ai';
+    });
+});
+
+document.querySelectorAll('#layoutBtns .layout-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (game.started) return;
+        activate('#layoutBtns .layout-btn', btn);
+        game.layout = btn.dataset.val;
+        updatePreview();
+    });
+});
+
+document.querySelectorAll('#winBtns .win-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (game.started) return;
+        activate('#winBtns .win-btn', btn);
+        btn.querySelector('.radio-dot').classList.add('bg-amber-500','border-amber-500');
+        document.querySelectorAll('#winBtns .win-btn').forEach(b => {
+            if (b !== btn) b.querySelector('.radio-dot').classList.remove('bg-amber-500','border-amber-500');
         });
+        game.winCondition = btn.dataset.val;
+    });
+});
 
-        document.querySelectorAll('#layoutBtns .layout-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('#layoutBtns .layout-btn').forEach(b => b.classList.remove('border-amber-500', 'bg-amber-500/10', 'active'));
-                btn.classList.add('border-amber-500', 'bg-amber-500/10', 'active');
-                game.layout = btn.dataset.val;
-            });
+document.getElementById('stonesRange').addEventListener('input', function() {
+    const v = this.value;
+    document.getElementById('stonesVal').innerText = v;
+    document.getElementById('previewCount').innerText = v;
+    const pct = ((v - 6) / (20 - 6)) * 100;
+    this.style.setProperty('--p', pct + '%');
+    if (!game.started) {
+        game.totalStones = parseInt(v);
+        updatePreview();
+    }
+});
+
+/* ============ ПРЕВЬЮ ============ */
+function updatePreview() {
+    const board = document.getElementById('previewBoard');
+    board.innerHTML = '';
+    const n = game.totalStones;
+    if (game.layout === 'circle') {
+        const wrap = document.createElement('div');
+        wrap.className = 'relative w-32 h-32 flex items-center justify-center';
+        for (let i = 0; i < n; i++) {
+            const angle = (i / n) * 2 * Math.PI - Math.PI/2;
+            const x = Math.cos(angle) * 55;
+            const y = Math.sin(angle) * 55;
+            const dot = document.createElement('div');
+            dot.className = 'absolute w-4 h-4 rounded-md bg-amber-500/70 border border-amber-600/40';
+            dot.style.transform = `translate(${x}px,${y}px)`;
+            wrap.appendChild(dot);
+        }
+        board.appendChild(wrap);
+    } else {
+        const wrap = document.createElement('div');
+        wrap.className = 'flex flex-wrap gap-1.5 justify-center max-w-[220px]';
+        for (let i = 0; i < n; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'w-4 h-4 rounded-md bg-amber-500/70 border border-amber-600/40';
+            wrap.appendChild(dot);
+        }
+        board.appendChild(wrap);
+    }
+}
+
+/* ============ ЭКРАНЫ ============ */
+function switchScreen(screen) {
+    // screen: 'menu' | 'game'
+    const settings = document.getElementById('settingsPanel');
+    const gameSection = document.querySelector('#tab-play section');
+    if (screen === 'menu') {
+        game.started = false;
+        game.ended = false;
+        settings.classList.remove('hidden');
+        document.getElementById('boardContainer').classList.add('hidden');
+        document.querySelector('#tab-play section').classList.add('hidden');
+    } else {
+        settings.classList.add('hidden');
+        document.getElementById('boardContainer').classList.remove('hidden');
+        document.querySelector('#tab-play section').classList.remove('hidden');
+    }
+    switchTab('play');
+}
+
+/* ============ СТАРТ ИГРЫ ============ */
+function startGame() {
+    game.totalStones = parseInt(document.getElementById('stonesRange').value);
+    game.stones = Array.from({length: game.totalStones}, (_, i) => ({ id: i+1, active: true }));
+    game.currentPlayer = 0;
+    game.selected = [];
+    game.aiThinking = false;
+    game.started = true;
+    game.ended = false;
+    game.history = [];
+    game.moveCount = 0;
+    game.stonesTaken = 0;
+    updateHistoryBadge();
+    switchScreen('game');
+    updateUI();
+}
+
+/* ============ ЛОГИКА ============ */
+function getActiveStones() { return game.stones.filter(s => s.active); }
+
+function areAdjacent(id1, id2) {
+    const active = getActiveStones();
+    const n = active.length;
+    if (n < 2) return false;
+    const p1 = active.findIndex(s => s.id === id1);
+    const p2 = active.findIndex(s => s.id === id2);
+    if (p1 === -1 || p2 === -1 || p1 === p2) return false;
+    const diff = Math.abs(p1 - p2);
+    if (game.layout === 'row') return diff === 1;
+    if (diff === 1) return true;
+    const minP = Math.min(p1, p2), maxP = Math.max(p1, p2);
+    return (minP === 0 && maxP === n - 1);
+}
+
+function handleStoneClick(id) {
+    if (game.aiThinking) return;
+    if (game.isAI && game.currentPlayer === 1) return;
+    if (game.ended) return;
+    const stone = game.stones.find(s => s.id === id);
+    if (!stone || !stone.active) return;
+
+    const idx = game.selected.indexOf(id);
+    if (idx > -1) {
+        game.selected.splice(idx, 1);
+    } else if (game.selected.length === 0) {
+        game.selected = [id];
+    } else if (game.selected.length === 1) {
+        if (areAdjacent(game.selected[0], id)) {
+            game.selected.push(id);
+        } else {
+            // Подсветить ошибку и заменить выбор
+            shakeStone(id);
+            setHint(tr('hintCantSelect'), 'error');
+            game.selected = [id];
+        }
+    } else {
+        game.selected = [id];
+    }
+    renderBoard();
+    updateActionState();
+    updateStatusTexts();
+}
+
+function shakeStone(id) {
+    const el = document.querySelector(`[data-stone-id="${id}"]`);
+    if (el) { el.classList.add('animate-shake'); setTimeout(()=>el.classList.remove('animate-shake'), 300); }
+}
+
+function setHint(text, type) {
+    const h = document.getElementById('hintText');
+    h.innerText = text;
+    h.className = 'text-xs font-semibold text-center min-h-[16px] ' +
+        (type === 'error' ? 'text-red-500' : type === 'success' ? 'text-emerald-600 dark:text-emerald-400' : 'text-zen-600 dark:text-zinc-400');
+}
+
+function updateStatusTexts() {
+    if (!game.started || game.ended) return;
+    if (game.aiThinking) { setHint(tr('hintAITurn'), 'info'); return; }
+    if (game.selected.length === 1) setHint(tr('hintSelected1'), 'info');
+    else if (game.selected.length === 2) setHint(tr('hintSelected2'), 'success');
+    else setHint(tr('hintStart'), 'info');
+}
+
+function updateActionState() {
+    const btn = document.getElementById('confirmBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const len = game.selected.length;
+    const canAct = !game.aiThinking && !(game.isAI && game.currentPlayer === 1) && !game.ended;
+    if ((len === 1 || len === 2) && canAct) btn.removeAttribute('disabled');
+    else btn.setAttribute('disabled','true');
+    if (len > 0 && canAct) clearBtn.removeAttribute('disabled');
+    else clearBtn.setAttribute('disabled','true');
+
+    document.getElementById('selectedCount').innerHTML = len + '<span class="text-xs font-semibold text-zen-600 dark:text-zinc-400">/2</span>';
+}
+
+function clearSelection() {
+    if (game.aiThinking) return;
+    game.selected = [];
+    renderBoard();
+    updateActionState();
+    updateStatusTexts();
+}
+
+function confirmMove() {
+    if (game.aiThinking || game.ended) return;
+    if (game.isAI && game.currentPlayer === 1) return;
+    if (game.selected.length === 0) return;
+    if (game.selected.length === 2 && !areAdjacent(game.selected[0], game.selected[1])) return;
+
+    const picked = [...game.selected];
+    picked.forEach(id => { const s = game.stones.find(x => x.id === id); if (s) s.active = false; });
+
+    // История
+    game.moveCount++;
+    game.stonesTaken += picked.length;
+    game.history.push({
+        player: game.currentPlayer,
+        stones: picked,
+        remaining: getActiveStones().length
+    });
+    updateHistoryBadge();
+
+    game.selected = [];
+
+    if (getActiveStones().length === 0) {
+        endGame(game.currentPlayer);
+        return;
+    }
+
+    game.currentPlayer = (game.currentPlayer + 1) % game.playersCount;
+    updateUI();
+
+    if (game.isAI && game.currentPlayer === 1 && getActiveStones().length > 0) {
+        game.aiThinking = true;
+        updateActionState();
+        setTimeout(aiMove, 700);
+    }
+}
+
+function aiMove() {
+    const active = getActiveStones();
+    if (active.length === 0) { game.aiThinking = false; return; }
+
+    const validPairs = [];
+    for (let i = 0; i < active.length; i++)
+        for (let j = i+1; j < active.length; j++)
+            if (areAdjacent(active[i].id, active[j].id)) validPairs.push([active[i].id, active[j].id]);
+
+    let chosen = [];
+    if (validPairs.length > 0 && Math.random() > 0.4) chosen = validPairs[Math.floor(Math.random()*validPairs.length)];
+    else chosen = [active[Math.floor(Math.random()*active.length)].id];
+
+    game.selected = chosen;
+    renderBoard();
+
+    setTimeout(() => {
+        chosen.forEach(id => { const s = game.stones.find(x => x.id === id); if (s) s.active = false; });
+        game.moveCount++;
+        game.stonesTaken += chosen.length;
+        game.history.push({ player: game.currentPlayer, stones: chosen, remaining: getActiveStones().length });
+        updateHistoryBadge();
+        game.selected = [];
+        game.aiThinking = false;
+
+        if (getActiveStones().length === 0) { endGame(game.currentPlayer); return; }
+        game.currentPlayer = 0;
+        updateUI();
+    }, 500);
+}
+
+function endGame(lastPlayerIdx) {
+    game.ended = true;
+    let winnerIdx = lastPlayerIdx;
+    if (game.winCondition === 'misere') winnerIdx = (lastPlayerIdx - 1 + game.playersCount) % game.playersCount;
+
+    let winText;
+    if (game.isAI && winnerIdx === 1) winText = (currentLang === 'ru') ? 'ИИ победил!' : (currentLang === 'zh' ? 'AI 胜利！' : 'AI wins!');
+    else if (game.isAI && winnerIdx === 0) winText = (currentLang === 'ru') ? 'Вы победили!' : (currentLang === 'zh' ? '你赢了！' : 'You win!');
+    else winText = `${tr('player')} ${winnerIdx + 1}`;
+
+    document.getElementById('winnerText').innerText = winText;
+    document.getElementById('statMoves').innerText = game.moveCount;
+    document.getElementById('statStones').innerText = game.stonesTaken;
+    const overlay = document.getElementById('victoryOverlay');
+    overlay.classList.remove('hidden');
+    overlay.classList.add('flex');
+}
+
+function closeVictory() {
+    const overlay = document.getElementById('victoryOverlay');
+    overlay.classList.add('hidden');
+    overlay.classList.remove('flex');
+}
+
+/* ============ ОБНОВЛЕНИЕ UI ============ */
+function updateUI() {
+    updateStatusTexts();
+    updateActionState();
+    renderBoard();
+    updateTurnIndicator();
+    updateProgress();
+}
+
+function updateTurnIndicator() {
+    const isAI = game.isAI && game.currentPlayer === 1;
+    const name = isAI ? tr('ai') : `${tr('player')} ${game.currentPlayer + 1}`;
+    document.getElementById('turnIndicator').innerText = name;
+    const badge = document.getElementById('playerBadge');
+    if (isAI) {
+        badge.innerText = 'AI';
+        badge.className = badge.className.replace(/from-\S+ to-\S+/g, 'from-zinc-500 to-zinc-700');
+    } else {
+        badge.innerText = 'P' + (game.currentPlayer + 1);
+        badge.className = badge.className.replace(/from-\S+ to-\S+/g, 'from-amber-500 to-amber-600');
+    }
+}
+
+function updateProgress() {
+    const active = getActiveStones().length;
+    document.getElementById('stonesLeft').innerText = active;
+    const pct = ((game.totalStones - active) / game.totalStones) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function renderBoard() {
+    const container = document.getElementById('boardContainer');
+    container.innerHTML = '';
+    const total = game.stones.length;
+    const canClick = !game.aiThinking && !(game.isAI && game.currentPlayer === 1) && !game.ended;
+
+    if (game.layout === 'circle') {
+        const wrap = document.createElement('div');
+        wrap.className = 'relative w-72 h-72 md:w-96 md:h-96 mx-auto flex items-center justify-center';
+        const radius = window.innerWidth < 480 ? 120 : 150;
+
+        game.stones.forEach((stone, i) => {
+            if (!stone.active) return;
+            const angle = (i / total) * 2 * Math.PI - Math.PI/2;
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+            const isSelected = game.selected.includes(stone.id);
+
+            // Подсветка возможных соседей
+            let neighborHint = false;
+            if (game.selected.length === 1 && !isSelected) {
+                neighborHint = areAdjacent(game.selected[0], stone.id);
+            }
+
+            const btn = document.createElement('button');
+            btn.dataset.stoneId = stone.id;
+            let cls = 'absolute w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center font-extrabold text-sm transition-all duration-300 shadow-md ';
+            if (isSelected) cls += 'bg-gradient-to-br from-amber-500 to-amber-600 text-white ring-4 ring-amber-500/40 scale-110 shadow-lg shadow-amber-600/40';
+            else if (neighborHint) cls += 'glass border-2 border-amber-500/60 text-amber-600 dark:text-amber-400 hover:scale-105 animate-glow';
+            else cls += 'glass border border-zen-200 dark:border-zinc-700 hover:border-amber-500/50 hover:scale-105 ';
+            if (!canClick) cls += ' cursor-not-allowed opacity-70';
+            btn.className = cls;
+            btn.style.transform = `translate(${x}px, ${y}px)`;
+            btn.innerHTML = stone.id;
+            btn.onclick = () => handleStoneClick(stone.id);
+            wrap.appendChild(btn);
         });
+        container.appendChild(wrap);
+    } else {
+        const wrap = document.createElement('div');
+        wrap.className = 'flex flex-wrap gap-3 justify-center max-w-3xl items-center p-4';
 
-        document.querySelectorAll('#winBtns .win-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('#winBtns .win-btn').forEach(b => b.classList.remove('border-amber-500', 'bg-amber-500/10', 'active'));
-                btn.classList.add('border-amber-500', 'bg-amber-500/10', 'active');
-                game.winCondition = btn.dataset.val;
-            });
+        game.stones.forEach(stone => {
+            if (!stone.active) return;
+            const isSelected = game.selected.includes(stone.id);
+            let neighborHint = false;
+            if (game.selected.length === 1 && !isSelected) neighborHint = areAdjacent(game.selected[0], stone.id);
+
+            const btn = document.createElement('button');
+            btn.dataset.stoneId = stone.id;
+            let cls = 'w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center font-extrabold text-sm transition-all duration-300 shadow-md ';
+            if (isSelected) cls += 'bg-gradient-to-br from-amber-500 to-amber-600 text-white ring-4 ring-amber-500/40 scale-110 shadow-lg shadow-amber-600/40';
+            else if (neighborHint) cls += 'glass border-2 border-amber-500/60 text-amber-600 dark:text-amber-400 hover:scale-105 animate-glow';
+            else cls += 'glass border border-zen-200 dark:border-zinc-700 hover:border-amber-500/50 hover:scale-105 ';
+            if (!canClick) cls += ' cursor-not-allowed opacity-70';
+            btn.className = cls;
+            btn.innerHTML = stone.id;
+            btn.onclick = () => handleStoneClick(stone.id);
+            wrap.appendChild(btn);
         });
+        container.appendChild(wrap);
+    }
+}
 
-        function switchScreen(screen) {
-            ['menuScreen', 'gameScreen', 'victoryScreen'].forEach(s => document.getElementById(s).classList.add('hidden'));
-            document.getElementById(screen + 'Screen').classList.remove('hidden');
-        }
+/* ============ ИСТОРИЯ ============ */
+function updateHistoryBadge() {
+    const badge = document.getElementById('historyBadge');
+    const n = game.history.length;
+    if (n > 0) { badge.innerText = n; badge.classList.remove('hidden'); }
+    else badge.classList.add('hidden');
+    updateHistoryUI();
+}
 
-        function startGame() {
-            game.totalStones = parseInt(document.getElementById('stonesRange').value);
-            game.stones = Array.from({length: game.totalStones}, (_, i) => ({ id: i + 1, active: true }));
-            game.currentPlayer = 0;
-            game.selected = [];
-            game.aiThinking = false;
-            switchScreen('game');
-            updateUI();
-            // Если первым ходит ИИ — маловероятно, но на всякий случай
-            if (game.isAI && game.currentPlayer === 1) setTimeout(aiMove, 700);
-        }
+function updateHistoryUI() {
+    const list = document.getElementById('historyList');
+    if (!list) return;
+    if (game.history.length === 0) {
+        list.innerHTML = `<div class="text-center text-sm text-zen-600 dark:text-zinc-500 py-12">${tr('historyEmpty')}</div>`;
+        return;
+    }
+    list.innerHTML = '';
+    game.history.slice().reverse().forEach((h, idx) => {
+        const n = game.history.length - idx;
+        const isAI = game.isAI && h.player === 1;
+        const name = isAI ? tr('ai') : `${tr('player')} ${h.player + 1}`;
+        const badgeColor = h.player === 0 ? 'from-amber-500 to-amber-600' : 'from-zinc-500 to-zinc-700';
+        const div = document.createElement('div');
+        div.className = 'flex items-center gap-3 p-3 rounded-2xl bg-white/40 dark:bg-zinc-800/40 border border-zen-200 dark:border-zinc-700 hover:border-amber-500/40 transition';
+        div.innerHTML = `
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br ${badgeColor} text-white flex items-center justify-center font-extrabold text-xs shrink-0">${isAI ? 'AI' : 'P' + (h.player + 1)}</div>
+            <div class="flex-1 min-w-0">
+                <div class="text-xs font-bold">#${n} — ${name}</div>
+                <div class="text-[11px] text-zen-600 dark:text-zinc-400 mt-0.5">${tr('moveTaken')} ${h.stones.map(s=>'#'+s).join(', ')} · ${tr('remaining')}: ${h.remaining}</div>
+            </div>
+        `;
+        list.appendChild(div);
+    });
+}
 
-        function getActiveStones() {
-            return game.stones.filter(s => s.active);
-        }
+function clearHistory() {
+    game.history = [];
+    updateHistoryBadge();
+}
 
-        function handleStoneClick(id) {
-            if (game.aiThinking) return;
-            if (game.isAI && game.currentPlayer === 1) return; // не даём кликать за ИИ
-
-            const stone = game.stones.find(s => s.id === id);
-            if (!stone || !stone.active) return;
-
-            const index = game.selected.indexOf(id);
-            if (index > -1) {
-                game.selected.splice(index, 1);
-            } else {
-                if (game.selected.length >= 2) {
-                    game.selected = [id];
-                } else if (game.selected.length === 1) {
-                    const active = getActiveStones();
-                    const firstId = game.selected[0];
-                    const idx1 = active.findIndex(s => s.id === firstId);
-                    const idx2 = active.findIndex(s => s.id === id);
-                    const n = active.length;
-
-                    let isAdjacent = false;
-                    if (game.layout === 'row') {
-                        isAdjacent = Math.abs(idx1 - idx2) === 1;
-                    } else {
-                        const diff = Math.abs(idx1 - idx2);
-                        isAdjacent = (diff === 1) || (Math.min(idx1, idx2) === 0 && Math.max(idx1, idx2) === n - 1);
-                    }
-
-                    if (isAdjacent) game.selected.push(id);
-                    else game.selected = [id];
-                } else {
-                    game.selected = [id];
-                }
-            }
-            renderBoard();
-            validateMove();
-        }
-
-        function validateMove() {
-            const btn = document.getElementById('confirmBtn');
-            const len = game.selected.length;
-            if (len === 1 || len === 2) btn.removeAttribute('disabled');
-            else btn.setAttribute('disabled', 'true');
-        }
-
-        function confirmMove() {
-            if (game.aiThinking) return;
-            if (game.isAI && game.currentPlayer === 1) return;
-            if (game.selected.length === 0) return;
-
-            game.selected.forEach(id => {
-                const s = game.stones.find(item => item.id === id);
-                if (s) s.active = false;
-            });
-            game.selected = [];
-
-            if (getActiveStones().length === 0) {
-                endGame(game.currentPlayer);
-                return;
-            }
-
-            game.currentPlayer = (game.currentPlayer + 1) % game.playersCount;
-            updateUI();
-
-            if (game.isAI && game.currentPlayer === 1 && getActiveStones().length > 0) {
-                game.aiThinking = true;
-                setTimeout(aiMove, 700);
-            }
-        }
-
-        function aiMove() {
-            const active = getActiveStones();
-            if (active.length === 0) { game.aiThinking = false; return; }
-
-            // Простой ИИ: 60% — пара соседних, 40% — одиночный
-            let chosen = [];
-            const r = Math.random();
-            if (r > 0.4 && active.length >= 2) {
-                const maxIdx = (game.layout === 'row') ? active.length - 1 : active.length;
-                const idx = Math.floor(Math.random() * maxIdx);
-                const first = active[idx];
-                const second = active[(idx + 1) % active.length];
-                chosen = [first.id, second.id];
-            } else {
-                const idx = Math.floor(Math.random() * active.length);
-                chosen = [active[idx].id];
-            }
-
-            game.selected = chosen;
-            renderBoard();
-
-            setTimeout(() => {
-                chosen.forEach(id => {
-                    const s = game.stones.find(item => item.id === id);
-                    if (s) s.active = false;
-                });
-                game.selected = [];
-                game.aiThinking = false;
-
-                if (getActiveStones().length === 0) {
-                    endGame(game.currentPlayer);
-                    return;
-                }
-                game.currentPlayer = 0;
-                updateUI();
-            }, 500);
-        }
-
-        function endGame(lastPlayerIdx) {
-            let winnerIdx = lastPlayerIdx;
-            if (game.winCondition === 'misere') {
-                winnerIdx = (lastPlayerIdx - 1 + game.playersCount) % game.playersCount;
-            }
-
-            let winText;
-            if (game.isAI && winnerIdx === 1) {
-                winText = (currentLang === 'ru') ? 'ИИ победил!' : 'AI wins!';
-            } else if (game.isAI && winnerIdx === 0) {
-                winText = (currentLang === 'ru') ? 'Вы победили!' : 'You win!';
-            } else {
-                winText = `${i18n[currentLang].player} ${winnerIdx + 1}`;
-            }
-
-            document.getElementById('winnerText').innerText = winText;
-            switchScreen('victory');
-        }
-
-        function updateUI() {
-            const pName = (game.isAI && game.currentPlayer === 1)
-                ? i18n[currentLang].ai
-                : `${i18n[currentLang].player} ${game.currentPlayer + 1}`;
-            document.getElementById('turnIndicator').innerText = pName;
-            document.getElementById('ruleIndicator').innerText = i18n[currentLang].selectPrompt;
-            renderBoard();
-            validateMove();
-        }
-
-        function renderBoard() {
-            const container = document.getElementById('boardContainer');
-            container.innerHTML = '';
-            const total = game.stones.length;
-
-            if (game.layout === 'circle') {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'relative w-72 h-72 md:w-80 md:h-80 mx-auto flex items-center justify-center';
-
-                game.stones.forEach((stone, i) => {
-                    if (!stone.active) return;
-                    const angle = (i / total) * 2 * Math.PI - Math.PI / 2;
-                    const radius = 120;
-                    const x = Math.cos(angle) * radius;
-                    const y = Math.sin(angle) * radius;
-
-                    const btn = document.createElement('button');
-                    const isSelected = game.selected.includes(stone.id);
-                    btn.className = `absolute w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-md ${
-                        isSelected
-                            ? 'bg-amber-600 text-white ring-4 ring-amber-500/40 scale-110 shadow-amber-600/30'
-                            : 'glass hover:bg-amber-500/10 border border-zen-200 dark:border-zinc-700'
-                    }`;
-                    btn.style.transform = `translate(${x}px, ${y}px)`;
-                    btn.innerHTML = stone.id;
-                    btn.onclick = () => handleStoneClick(stone.id);
-                    wrapper.appendChild(btn);
-                });
-                container.appendChild(wrapper);
-            } else {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'flex flex-wrap gap-3 justify-center max-w-2xl items-center p-4';
-
-                game.stones.forEach(stone => {
-                    if (!stone.active) return;
-                    const isSelected = game.selected.includes(stone.id);
-                    const btn = document.createElement('button');
-                    btn.className = `w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-md ${
-                        isSelected
-                            ? 'bg-amber-600 text-white ring-4 ring-amber-500/40 scale-105 shadow-amber-600/30'
-                            : 'glass hover:bg-amber-500/10 border border-zen-200 dark:border-zinc-700'
-                    }`;
-                    btn.innerHTML = stone.id;
-                    btn.onclick = () => handleStoneClick(stone.id);
-                    wrapper.appendChild(btn);
-                });
-                container.appendChild(wrapper);
-            }
-        }
-
-        // Инициализация
-        changeLang('ru');
-    </script>
+/* ============ INIT ============ */
+document.getElementById('stonesRange').dispatchEvent(new Event('input'));
+changeLang('ru');
+updatePreview();
+switchTab('play');
+switchScreen('menu');
+</script>
 </body>
 </html>
