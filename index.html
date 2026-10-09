@@ -14,7 +14,7 @@
                     fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
                     colors: {
                         zen: {
-                            50: '#fcfbf9', 100: '#f5f3ef', 200: '#e8e4dc', 
+                            50: '#fcfbf9', 100: '#f5f3ef', 200: '#e8e4dc',
                             300: '#d4cbb8', 600: '#8c7a6b', 800: '#4a4036', 900: '#2b241d'
                         }
                     }
@@ -31,7 +31,6 @@
 </head>
 <body class="bg-gradient-to-br from-zen-50 via-zen-100 to-zen-200 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 text-zen-800 dark:text-zen-100 min-h-screen flex flex-col justify-between selection:bg-amber-500/20 transition-colors duration-500">
 
-    <!-- Хэдер -->
     <header class="w-full max-w-5xl mx-auto p-6 flex justify-between items-center">
         <div class="flex items-center space-x-3 cursor-pointer" onclick="switchScreen('menu')">
             <div class="w-10 h-10 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 flex items-center justify-center border border-amber-500/30">
@@ -56,7 +55,6 @@
         </div>
     </header>
 
-    <!-- Основной контент -->
     <main class="w-full max-w-4xl mx-auto p-4 flex-1 flex flex-col items-center justify-center">
 
         <!-- МЕНЮ -->
@@ -70,27 +68,27 @@
                 <div>
                     <label class="block font-medium mb-1.5 text-xs uppercase tracking-wider text-zen-600 dark:text-zinc-400" data-i18n="playersLabel">Игроки</label>
                     <div class="grid grid-cols-5 gap-2" id="playersBtns">
-                        <button onclick="setPlayers(2)" class="p-2.5 rounded-xl border font-semibold transition player-btn active" data-val="2">1 vs AI</button>
-                        <button onclick="setPlayers(2)" class="p-2.5 rounded-xl border font-semibold transition player-btn" data-val="2p">2P</button>
-                        <button onclick="setPlayers(3)" class="p-2.5 rounded-xl border font-semibold transition player-btn" data-val="3">3</button>
-                        <button onclick="setPlayers(4)" class="p-2.5 rounded-xl border font-semibold transition player-btn" data-val="4">4</button>
-                        <button onclick="setPlayers(6)" class="p-2.5 rounded-xl border font-semibold transition player-btn" data-val="6">6</button>
+                        <button data-mode="ai"     data-players="2" class="p-2.5 rounded-xl border font-semibold transition player-btn active">1 vs AI</button>
+                        <button data-mode="human"  data-players="2" class="p-2.5 rounded-xl border font-semibold transition player-btn">2P</button>
+                        <button data-mode="human"  data-players="3" class="p-2.5 rounded-xl border font-semibold transition player-btn">3</button>
+                        <button data-mode="human"  data-players="4" class="p-2.5 rounded-xl border font-semibold transition player-btn">4</button>
+                        <button data-mode="human"  data-players="6" class="p-2.5 rounded-xl border font-semibold transition player-btn">6</button>
                     </div>
                 </div>
 
                 <div>
                     <label class="block font-medium mb-1.5 text-xs uppercase tracking-wider text-zen-600 dark:text-zinc-400" data-i18n="layoutLabel">Расположение</label>
                     <div class="grid grid-cols-2 gap-2" id="layoutBtns">
-                        <button onclick="setLayout('circle')" class="p-3 rounded-xl border font-medium transition layout-btn active" data-val="circle" data-i18n="layoutCircle">Окружность</button>
-                        <button onclick="setLayout('row')" class="p-3 rounded-xl border font-medium transition layout-btn" data-val="row" data-i18n="layoutRow">Линия (Ряд)</button>
+                        <button data-val="circle" class="p-3 rounded-xl border font-medium transition layout-btn active" data-i18n="layoutCircle">Окружность</button>
+                        <button data-val="row" class="p-3 rounded-xl border font-medium transition layout-btn" data-i18n="layoutRow">Линия (Ряд)</button>
                     </div>
                 </div>
 
                 <div>
                     <label class="block font-medium mb-1.5 text-xs uppercase tracking-wider text-zen-600 dark:text-zinc-400" data-i18n="winLabel">Условие победы</label>
                     <div class="grid grid-cols-2 gap-2" id="winBtns">
-                        <button onclick="setWinCond('normal')" class="p-3 rounded-xl border font-medium transition win-btn active" data-val="normal" data-i18n="winNormal">Нормальное (последний ходит)</button>
-                        <button onclick="setWinCond('misere')" class="p-3 rounded-xl border font-medium transition win-btn" data-val="misere" data-i18n="winMisere">Мизер (последний проигрывает)</button>
+                        <button data-val="normal" class="p-3 rounded-xl border font-medium transition win-btn active" data-i18n="winNormal">Нормальное</button>
+                        <button data-val="misere" class="p-3 rounded-xl border font-medium transition win-btn" data-i18n="winMisere">Мизер</button>
                     </div>
                 </div>
 
@@ -106,7 +104,6 @@
 
         <!-- ИГРОВОЙ ЭКРАН -->
         <div id="gameScreen" class="w-full hidden flex flex-col items-center space-y-6">
-            <!-- Инфо-панель -->
             <div class="glass w-full max-w-lg p-4 rounded-2xl flex justify-between items-center border border-white/40 dark:border-zinc-800 shadow-lg">
                 <div>
                     <span class="text-xs text-zen-600 dark:text-zinc-400 uppercase tracking-wider" data-i18n="turnTitle">Ход игрока</span>
@@ -118,12 +115,8 @@
                 </div>
             </div>
 
-            <!-- Игровое поле -->
-            <div id="boardContainer" class="w-full min-h-[380px] flex items-center justify-center relative p-6">
-                <!-- Динамическое поле отрисовывается в JS -->
-            </div>
+            <div id="boardContainer" class="w-full min-h-[380px] flex items-center justify-center relative p-6"></div>
 
-            <!-- Панель управления ходом -->
             <div class="flex items-center space-x-4">
                 <button onclick="confirmMove()" id="confirmBtn" disabled class="px-8 py-3.5 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-semibold shadow-lg shadow-amber-600/20 disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98] transition flex items-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
@@ -148,7 +141,6 @@
 
     </main>
 
-    <!-- Футер -->
     <footer class="w-full text-center p-6 text-xs text-zen-600 dark:text-zinc-500">
         Kayles Game • Zen Minimalist Edition
     </footer>
@@ -156,121 +148,11 @@
     <script>
         // ЛОКАЛИЗАЦИЯ
         const i18n = {
-            ru: {
-                subtitle: "Zen Minimalist Edition",
-                menuTitle: "Настройки игры",
-                menuDesc: "Выберите параметры для медитативной сессии",
-                playersLabel: "Режим игроков",
-                layoutLabel: "Расположение камней",
-                layoutCircle: "Окружность",
-                layoutRow: "Линия (Ряд)",
-                winLabel: "Условие победы",
-                winNormal: "Нормальное (последний берет)",
-                winMisere: "Мизер (последний проигрывает)",
-                stonesLabel: "Количество камней",
-                startBtn: "Начать игру",
-                turnTitle: "Ход игрока",
-                ruleTitle: "Правило",
-                confirmBtn: "Подтвердить ход",
-                menuBtn: "В меню",
-                victoryDesc: "Игра завершена. Прекрасная стратегия.",
-                restartBtn: "Играть снова",
-                player: "Игрок",
-                ai: "ИИ",
-                selectPrompt: "Выберите 1 камень или 2 соседних"
-            },
-            en: {
-                subtitle: "Zen Minimalist Edition",
-                menuTitle: "Game Settings",
-                menuDesc: "Configure parameters for your meditative session",
-                playersLabel: "Players Mode",
-                layoutLabel: "Board Layout",
-                layoutCircle: "Circle",
-                layoutRow: "Row",
-                winLabel: "Win Condition",
-                winNormal: "Normal (last to move wins)",
-                winMisere: "Misère (last to move loses)",
-                stonesLabel: "Number of stones",
-                startBtn: "Start Game",
-                turnTitle: "Current Turn",
-                ruleTitle: "Rule",
-                confirmBtn: "Confirm Move",
-                menuBtn: "Menu",
-                victoryDesc: "Game over. Brilliant strategy.",
-                restartBtn: "Play Again",
-                player: "Player",
-                ai: "AI",
-                selectPrompt: "Select 1 stone or 2 adjacent"
-            },
-            es: {
-                subtitle: "Zen Minimalist Edition",
-                menuTitle: "Ajustes del juego",
-                menuDesc: "Configura los parámetros para tu sesión",
-                playersLabel: "Modo de jugadores",
-                layoutLabel: "Diseño del tablero",
-                layoutCircle: "Círculo",
-                layoutRow: "Fila",
-                winLabel: "Condición de victoria",
-                winNormal: "Normal (último en mover gana)",
-                winMisere: "Misère (último en mover pierde)",
-                stonesLabel: "Número de piedras",
-                startBtn: "Empezar juego",
-                turnTitle: "Turno actual",
-                ruleTitle: "Regla",
-                confirmBtn: "Confirmar movimiento",
-                menuBtn: "Menú",
-                victoryDesc: "Juego terminado. Excelente estrategia.",
-                restartBtn: "Jugar de nuevo",
-                player: "Jugador",
-                ai: "IA",
-                selectPrompt: "Selecciona 1 piedra o 2 adyacentes"
-            },
-            de: {
-                subtitle: "Zen Minimalist Edition",
-                menuTitle: "Spieleinstellungen",
-                menuDesc: "Konfigurieren Sie die Parameter",
-                playersLabel: "Spielermodus",
-                layoutLabel: "Spielfeld-Layout",
-                layoutCircle: "Kreis",
-                layoutRow: "Reihe",
-                winLabel: "Gewinnbedingung",
-                winNormal: "Normal (letzter Zug gewinnt)",
-                winMisere: "Misère (letzter Zug verliert)",
-                stonesLabel: "Anzahl der Steine",
-                startBtn: "Spiel starten",
-                turnTitle: "Aktueller Zug",
-                ruleTitle: "Regel",
-                confirmBtn: "Zug bestätigen",
-                menuBtn: "Menü",
-                victoryDesc: "Spiel beendet. Brillante Strategie.",
-                restartBtn: "Nochmal spielen",
-                player: "Spieler",
-                ai: "KI",
-                selectPrompt: "Wähle 1 Stein oder 2 benachbarte"
-            },
-            zh: {
-                subtitle: "Zen Minimalist Edition",
-                menuTitle: "游戏设置",
-                menuDesc: "配置您的禅意游戏体验",
-                playersLabel: "玩家模式",
-                layoutLabel: "棋盘布局",
-                layoutCircle: "环形",
-                layoutRow: "直线",
-                winLabel: "胜利条件",
-                winNormal: "常规 (最后拿取者胜)",
-                winMisere: "反常 (最后拿取者负)",
-                stonesLabel: "石块数量",
-                startBtn: "开始游戏",
-                turnTitle: "当前回合",
-                ruleTitle: "规则",
-                confirmBtn: "确认走子",
-                menuBtn: "菜单",
-                victoryDesc: "游戏结束。精妙的策略。",
-                restartBtn: "再玩一次",
-                player: "玩家",
-                ai: "AI",
-                selectPrompt: "选择1个或2个相邻石块"
-            }
+            ru: { subtitle:"Zen Minimalist Edition", menuTitle:"Настройки игры", menuDesc:"Выберите параметры для медитативной сессии", playersLabel:"Режим игроков", layoutLabel:"Расположение камней", layoutCircle:"Окружность", layoutRow:"Линия (Ряд)", winLabel:"Условие победы", winNormal:"Нормальное (последний берет)", winMisere:"Мизер (последний проигрывает)", stonesLabel:"Количество камней", startBtn:"Начать игру", turnTitle:"Ход игрока", ruleTitle:"Правило", confirmBtn:"Подтвердить ход", menuBtn:"В меню", victoryDesc:"Игра завершена. Прекрасная стратегия.", restartBtn:"Играть снова", player:"Игрок", ai:"ИИ", selectPrompt:"Выберите 1 камень или 2 соседних" },
+            en: { subtitle:"Zen Minimalist Edition", menuTitle:"Game Settings", menuDesc:"Configure parameters for your meditative session", playersLabel:"Players Mode", layoutLabel:"Board Layout", layoutCircle:"Circle", layoutRow:"Row", winLabel:"Win Condition", winNormal:"Normal (last to move wins)", winMisere:"Misère (last to move loses)", stonesLabel:"Number of stones", startBtn:"Start Game", turnTitle:"Current Turn", ruleTitle:"Rule", confirmBtn:"Confirm Move", menuBtn:"Menu", victoryDesc:"Game over. Brilliant strategy.", restartBtn:"Play Again", player:"Player", ai:"AI", selectPrompt:"Select 1 stone or 2 adjacent" },
+            es: { subtitle:"Zen Minimalist Edition", menuTitle:"Ajustes del juego", menuDesc:"Configura los parámetros para tu sesión", playersLabel:"Modo de jugadores", layoutLabel:"Diseño del tablero", layoutCircle:"Círculo", layoutRow:"Fila", winLabel:"Condición de victoria", winNormal:"Normal (último en mover gana)", winMisere:"Misère (último en mover pierde)", stonesLabel:"Número de piedras", startBtn:"Empezar juego", turnTitle:"Turno actual", ruleTitle:"Regla", confirmBtn:"Confirmar movimiento", menuBtn:"Menú", victoryDesc:"Juego terminado. Excelente estrategia.", restartBtn:"Jugar de nuevo", player:"Jugador", ai:"IA", selectPrompt:"Selecciona 1 piedra o 2 adyacentes" },
+            de: { subtitle:"Zen Minimalist Edition", menuTitle:"Spieleinstellungen", menuDesc:"Konfigurieren Sie die Parameter", playersLabel:"Spielermodus", layoutLabel:"Spielfeld-Layout", layoutCircle:"Kreis", layoutRow:"Reihe", winLabel:"Gewinnbedingung", winNormal:"Normal (letzter Zug gewinnt)", winMisere:"Misère (letzter Zug verliert)", stonesLabel:"Anzahl der Steine", startBtn:"Spiel starten", turnTitle:"Aktueller Zug", ruleTitle:"Regel", confirmBtn:"Zug bestätigen", menuBtn:"Menü", victoryDesc:"Spiel beendet. Brillante Strategie.", restartBtn:"Nochmal spielen", player:"Spieler", ai:"KI", selectPrompt:"Wähle 1 Stein oder 2 benachbarte" },
+            zh: { subtitle:"Zen Minimalist Edition", menuTitle:"游戏设置", menuDesc:"配置您的禅意游戏体验", playersLabel:"玩家模式", layoutLabel:"棋盘布局", layoutCircle:"环形", layoutRow:"直线", winLabel:"胜利条件", winNormal:"常规 (最后拿取者胜)", winMisere:"反常 (最后拿取者负)", stonesLabel:"石块数量", startBtn:"开始游戏", turnTitle:"当前回合", ruleTitle:"规则", confirmBtn:"确认走子", menuBtn:"菜单", victoryDesc:"游戏结束。精妙的策略。", restartBtn:"再玩一次", player:"玩家", ai:"AI", selectPrompt:"选择1个或2个相邻石块" }
         };
 
         let currentLang = 'ru';
@@ -279,60 +161,56 @@
             currentLang = lang;
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (i18n[lang][key]) el.innerText = i18n[lang][key];
+                if (i18n[lang] && i18n[lang][key]) el.innerText = i18n[lang][key];
             });
         }
 
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
-            document.getElementById('themeIcon').innerHTML = isDark ? 
-                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>' :
-                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>';
+            document.getElementById('themeIcon').innerHTML = isDark
+                ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>'
+                : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>';
         }
 
         // СОСТОЯНИЕ ИГРЫ
-        let game = {
+        const game = {
             playersCount: 2,
             isAI: true,
             layout: 'circle',
             winCondition: 'normal',
             totalStones: 12,
-            stones: [], // { id, active }
-            currentPlayer: 0, // 0 to N-1
-            selected: [] // selected ids
+            stones: [],
+            currentPlayer: 0,
+            selected: [],
+            aiThinking: false
         };
 
-        function setPlayers(num) {
-            game.playersCount = num;
-            game.isAI = (num === 2 && document.querySelector('#playersBtns button[data-val="2"]').classList.contains('active'));
-            document.querySelectorAll('#playersBtns button').forEach(b => b.classList.remove('border-amber-500', 'bg-amber-500/10', 'active'));
-            event.target.classList.add('border-amber-500', 'bg-amber-500/10', 'active');
-        }
-
-        // Обработчик кнопок игроков с учетом AI vs 2P
-        document.querySelectorAll('#playersBtns button').forEach((btn, idx) => {
-            btn.onclick = (e) => {
-                document.querySelectorAll('#playersBtns button').forEach(b => b.classList.remove('border-amber-500', 'bg-amber-500/10', 'active'));
-                e.target.classList.add('border-amber-500', 'bg-amber-500/10', 'active');
-                const val = e.target.getAttribute('data-val');
-                if(val === '2') { game.playersCount = 2; game.isAI = true; }
-                else if(val === '2p') { game.playersCount = 2; game.isAI = false; }
-                else { game.playersCount = parseInt(val); game.isAI = false; }
-            };
+        // Инициализация кнопок игроков через data-атрибуты (без event!)
+        document.querySelectorAll('#playersBtns .player-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#playersBtns .player-btn').forEach(b => b.classList.remove('border-amber-500', 'bg-amber-500/10', 'active'));
+                btn.classList.add('border-amber-500', 'bg-amber-500/10', 'active');
+                game.playersCount = parseInt(btn.dataset.players);
+                game.isAI = btn.dataset.mode === 'ai';
+            });
         });
 
-        function setLayout(layout) {
-            game.layout = layout;
-            document.querySelectorAll('#layoutBtns button').forEach(b => b.classList.remove('border-amber-500', 'bg-amber-500/10', 'active'));
-            event.target.classList.add('border-amber-500', 'bg-amber-500/10', 'active');
-        }
+        document.querySelectorAll('#layoutBtns .layout-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#layoutBtns .layout-btn').forEach(b => b.classList.remove('border-amber-500', 'bg-amber-500/10', 'active'));
+                btn.classList.add('border-amber-500', 'bg-amber-500/10', 'active');
+                game.layout = btn.dataset.val;
+            });
+        });
 
-        function setWinCond(cond) {
-            game.winCondition = cond;
-            document.querySelectorAll('#winBtns button').forEach(b => b.classList.remove('border-amber-500', 'bg-amber-500/10', 'active'));
-            event.target.classList.add('border-amber-500', 'bg-amber-500/10', 'active');
-        }
+        document.querySelectorAll('#winBtns .win-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#winBtns .win-btn').forEach(b => b.classList.remove('border-amber-500', 'bg-amber-500/10', 'active'));
+                btn.classList.add('border-amber-500', 'bg-amber-500/10', 'active');
+                game.winCondition = btn.dataset.val;
+            });
+        });
 
         function switchScreen(screen) {
             ['menuScreen', 'gameScreen', 'victoryScreen'].forEach(s => document.getElementById(s).classList.add('hidden'));
@@ -344,8 +222,11 @@
             game.stones = Array.from({length: game.totalStones}, (_, i) => ({ id: i + 1, active: true }));
             game.currentPlayer = 0;
             game.selected = [];
+            game.aiThinking = false;
             switchScreen('game');
             updateUI();
+            // Если первым ходит ИИ — маловероятно, но на всякий случай
+            if (game.isAI && game.currentPlayer === 1) setTimeout(aiMove, 700);
         }
 
         function getActiveStones() {
@@ -353,8 +234,194 @@
         }
 
         function handleStoneClick(id) {
+            if (game.aiThinking) return;
+            if (game.isAI && game.currentPlayer === 1) return; // не даём кликать за ИИ
+
             const stone = game.stones.find(s => s.id === id);
             if (!stone || !stone.active) return;
 
-            const index = game.selected.
+            const index = game.selected.indexOf(id);
+            if (index > -1) {
+                game.selected.splice(index, 1);
+            } else {
+                if (game.selected.length >= 2) {
+                    game.selected = [id];
+                } else if (game.selected.length === 1) {
+                    const active = getActiveStones();
+                    const firstId = game.selected[0];
+                    const idx1 = active.findIndex(s => s.id === firstId);
+                    const idx2 = active.findIndex(s => s.id === id);
+                    const n = active.length;
 
+                    let isAdjacent = false;
+                    if (game.layout === 'row') {
+                        isAdjacent = Math.abs(idx1 - idx2) === 1;
+                    } else {
+                        const diff = Math.abs(idx1 - idx2);
+                        isAdjacent = (diff === 1) || (Math.min(idx1, idx2) === 0 && Math.max(idx1, idx2) === n - 1);
+                    }
+
+                    if (isAdjacent) game.selected.push(id);
+                    else game.selected = [id];
+                } else {
+                    game.selected = [id];
+                }
+            }
+            renderBoard();
+            validateMove();
+        }
+
+        function validateMove() {
+            const btn = document.getElementById('confirmBtn');
+            const len = game.selected.length;
+            if (len === 1 || len === 2) btn.removeAttribute('disabled');
+            else btn.setAttribute('disabled', 'true');
+        }
+
+        function confirmMove() {
+            if (game.aiThinking) return;
+            if (game.isAI && game.currentPlayer === 1) return;
+            if (game.selected.length === 0) return;
+
+            game.selected.forEach(id => {
+                const s = game.stones.find(item => item.id === id);
+                if (s) s.active = false;
+            });
+            game.selected = [];
+
+            if (getActiveStones().length === 0) {
+                endGame(game.currentPlayer);
+                return;
+            }
+
+            game.currentPlayer = (game.currentPlayer + 1) % game.playersCount;
+            updateUI();
+
+            if (game.isAI && game.currentPlayer === 1 && getActiveStones().length > 0) {
+                game.aiThinking = true;
+                setTimeout(aiMove, 700);
+            }
+        }
+
+        function aiMove() {
+            const active = getActiveStones();
+            if (active.length === 0) { game.aiThinking = false; return; }
+
+            // Простой ИИ: 60% — пара соседних, 40% — одиночный
+            let chosen = [];
+            const r = Math.random();
+            if (r > 0.4 && active.length >= 2) {
+                const maxIdx = (game.layout === 'row') ? active.length - 1 : active.length;
+                const idx = Math.floor(Math.random() * maxIdx);
+                const first = active[idx];
+                const second = active[(idx + 1) % active.length];
+                chosen = [first.id, second.id];
+            } else {
+                const idx = Math.floor(Math.random() * active.length);
+                chosen = [active[idx].id];
+            }
+
+            game.selected = chosen;
+            renderBoard();
+
+            setTimeout(() => {
+                chosen.forEach(id => {
+                    const s = game.stones.find(item => item.id === id);
+                    if (s) s.active = false;
+                });
+                game.selected = [];
+                game.aiThinking = false;
+
+                if (getActiveStones().length === 0) {
+                    endGame(game.currentPlayer);
+                    return;
+                }
+                game.currentPlayer = 0;
+                updateUI();
+            }, 500);
+        }
+
+        function endGame(lastPlayerIdx) {
+            let winnerIdx = lastPlayerIdx;
+            if (game.winCondition === 'misere') {
+                winnerIdx = (lastPlayerIdx - 1 + game.playersCount) % game.playersCount;
+            }
+
+            let winText;
+            if (game.isAI && winnerIdx === 1) {
+                winText = (currentLang === 'ru') ? 'ИИ победил!' : 'AI wins!';
+            } else if (game.isAI && winnerIdx === 0) {
+                winText = (currentLang === 'ru') ? 'Вы победили!' : 'You win!';
+            } else {
+                winText = `${i18n[currentLang].player} ${winnerIdx + 1}`;
+            }
+
+            document.getElementById('winnerText').innerText = winText;
+            switchScreen('victory');
+        }
+
+        function updateUI() {
+            const pName = (game.isAI && game.currentPlayer === 1)
+                ? i18n[currentLang].ai
+                : `${i18n[currentLang].player} ${game.currentPlayer + 1}`;
+            document.getElementById('turnIndicator').innerText = pName;
+            document.getElementById('ruleIndicator').innerText = i18n[currentLang].selectPrompt;
+            renderBoard();
+            validateMove();
+        }
+
+        function renderBoard() {
+            const container = document.getElementById('boardContainer');
+            container.innerHTML = '';
+            const total = game.stones.length;
+
+            if (game.layout === 'circle') {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'relative w-72 h-72 md:w-80 md:h-80 mx-auto flex items-center justify-center';
+
+                game.stones.forEach((stone, i) => {
+                    if (!stone.active) return;
+                    const angle = (i / total) * 2 * Math.PI - Math.PI / 2;
+                    const radius = 120;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+
+                    const btn = document.createElement('button');
+                    const isSelected = game.selected.includes(stone.id);
+                    btn.className = `absolute w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-md ${
+                        isSelected
+                            ? 'bg-amber-600 text-white ring-4 ring-amber-500/40 scale-110 shadow-amber-600/30'
+                            : 'glass hover:bg-amber-500/10 border border-zen-200 dark:border-zinc-700'
+                    }`;
+                    btn.style.transform = `translate(${x}px, ${y}px)`;
+                    btn.innerHTML = stone.id;
+                    btn.onclick = () => handleStoneClick(stone.id);
+                    wrapper.appendChild(btn);
+                });
+                container.appendChild(wrapper);
+            } else {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'flex flex-wrap gap-3 justify-center max-w-2xl items-center p-4';
+
+                game.stones.forEach(stone => {
+                    if (!stone.active) return;
+                    const isSelected = game.selected.includes(stone.id);
+                    const btn = document.createElement('button');
+                    btn.className = `w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-md ${
+                        isSelected
+                            ? 'bg-amber-600 text-white ring-4 ring-amber-500/40 scale-105 shadow-amber-600/30'
+                            : 'glass hover:bg-amber-500/10 border border-zen-200 dark:border-zinc-700'
+                    }`;
+                    btn.innerHTML = stone.id;
+                    btn.onclick = () => handleStoneClick(stone.id);
+                    wrapper.appendChild(btn);
+                });
+                container.appendChild(wrapper);
+            }
+        }
+
+        // Инициализация
+        changeLang('ru');
+    </script>
+</body>
+</html>
