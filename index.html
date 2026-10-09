@@ -41,7 +41,6 @@ tailwind.config = {
 .dark .glass-strong { background: rgba(24,24,27,0.9); }
 .tab-active { color:#d97706; border-color:#d97706; }
 .dark .tab-active { color:#fbbf24; border-color:#fbbf24; }
-/* Hide scrollbar visually but keep scroll */
 .no-scrollbar::-webkit-scrollbar { display:none; }
 .no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
 input[type=range] { -webkit-appearance:none; height:6px; background:transparent; border-radius:9999px; }
@@ -67,21 +66,20 @@ input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.15); }
             </div>
         </button>
         <div class="flex items-center space-x-2">
-            <select id="langSelect" onchange="changeLang(this.value)" class="bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition cursor-pointer">
+            <select id="langSelect" class="bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition cursor-pointer">
                 <option value="ru">🇷🇺 RU</option>
                 <option value="en">🇬🇧 EN</option>
                 <option value="es">🇪🇸 ES</option>
                 <option value="de">🇩🇪 DE</option>
                 <option value="zh">🇨🇳 ZH</option>
             </select>
-            <button onclick="toggleDarkMode()" aria-label="theme" class="w-10 h-10 rounded-xl bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 flex items-center justify-center hover:scale-105 hover:border-amber-500/50 transition">
+            <button id="themeBtn" aria-label="theme" class="w-10 h-10 rounded-xl bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 flex items-center justify-center hover:scale-105 hover:border-amber-500/50 transition">
                 <svg id="themeIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             </button>
         </div>
     </div>
 </header>
 
-<!-- ОСНОВНОЙ КОНТЕНТ -->
 <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6">
 
     <!-- ВКЛАДКИ -->
@@ -114,45 +112,42 @@ input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.15); }
                             <span class="text-[10px] px-2 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold uppercase tracking-wider" data-i18n="beforeStart">до старта</span>
                         </div>
 
-                        <!-- Игроки -->
                         <div class="space-y-2 mb-5">
                             <label class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="playersLabel">Режим</label>
                             <div class="grid grid-cols-5 gap-1.5" id="playersBtns">
-                                <button data-mode="ai"    data-players="2" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">AI</button>
-                                <button data-mode="human" data-players="2" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">2P</button>
-                                <button data-mode="human" data-players="3" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">3P</button>
-                                <button data-mode="human" data-players="4" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">4P</button>
-                                <button data-mode="human" data-players="6" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">6P</button>
+                                <button type="button" data-mode="ai" data-players="2" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">AI</button>
+                                <button type="button" data-mode="human" data-players="2" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">2P</button>
+                                <button type="button" data-mode="human" data-players="3" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">3P</button>
+                                <button type="button" data-mode="human" data-players="4" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">4P</button>
+                                <button type="button" data-mode="human" data-players="6" class="player-btn p-2.5 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-[11px] font-bold transition hover:border-amber-500/50">6P</button>
                             </div>
                         </div>
 
-                        <!-- Раскладка -->
                         <div class="space-y-2 mb-5">
                             <label class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="layoutLabel">Раскладка</label>
                             <div class="grid grid-cols-2 gap-2" id="layoutBtns">
-                                <button data-val="circle" class="layout-btn p-3 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-xs font-bold transition hover:border-amber-500/50 flex items-center justify-center gap-2">
+                                <button type="button" data-val="circle" class="layout-btn p-3 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-xs font-bold transition hover:border-amber-500/50 flex items-center justify-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>
                                     <span data-i18n="layoutCircle">Круг</span>
                                 </button>
-                                <button data-val="row" class="layout-btn p-3 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-xs font-bold transition hover:border-amber-500/50 flex items-center justify-center gap-2">
+                                <button type="button" data-val="row" class="layout-btn p-3 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-xs font-bold transition hover:border-amber-500/50 flex items-center justify-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" stroke-linecap="round" d="M4 12h16"/></svg>
                                     <span data-i18n="layoutRow">Ряд</span>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Условие победы -->
                         <div class="space-y-2 mb-5">
                             <label class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="winLabel">Победа</label>
                             <div class="space-y-2" id="winBtns">
-                                <button data-val="normal" class="win-btn w-full p-3 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-xs font-bold transition hover:border-amber-500/50 text-left flex items-center gap-3">
+                                <button type="button" data-val="normal" class="win-btn w-full p-3 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-xs font-bold transition hover:border-amber-500/50 text-left flex items-center gap-3">
                                     <div class="w-4 h-4 rounded-full border-2 border-zen-300 dark:border-zinc-600 radio-dot shrink-0"></div>
                                     <div class="flex-1">
                                         <div data-i18n="winNormal">Нормальное</div>
                                         <div class="text-[10px] font-normal text-zen-600 dark:text-zinc-400 mt-0.5" data-i18n="winNormalHint">Взял последний — победил</div>
                                     </div>
                                 </button>
-                                <button data-val="misere" class="win-btn w-full p-3 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-xs font-bold transition hover:border-amber-500/50 text-left flex items-center gap-3">
+                                <button type="button" data-val="misere" class="win-btn w-full p-3 rounded-xl border-2 border-zen-200 dark:border-zinc-700 text-xs font-bold transition hover:border-amber-500/50 text-left flex items-center gap-3">
                                     <div class="w-4 h-4 rounded-full border-2 border-zen-300 dark:border-zinc-600 radio-dot shrink-0"></div>
                                     <div class="flex-1">
                                         <div data-i18n="winMisere">Мизер</div>
@@ -162,7 +157,6 @@ input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.15); }
                             </div>
                         </div>
 
-                        <!-- Камни -->
                         <div class="space-y-2">
                             <div class="flex justify-between items-baseline">
                                 <label class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="stonesLabel">Камней</label>
@@ -175,13 +169,12 @@ input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.15); }
                         </div>
                     </div>
 
-                    <button onclick="startGame()" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold shadow-lg shadow-amber-600/30 active:scale-[0.98] transition flex items-center justify-center gap-2 text-base">
+                    <button id="startBtn" type="button" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold shadow-lg shadow-amber-600/30 active:scale-[0.98] transition flex items-center justify-center gap-2 text-base">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <span data-i18n="startBtn">Начать игру</span>
                     </button>
                 </div>
 
-                <!-- Мини-превью -->
                 <div class="glass rounded-3xl border border-white/40 dark:border-zinc-800 shadow-xl p-5">
                     <div class="flex items-center justify-between mb-3">
                         <h3 class="text-xs font-bold uppercase tracking-widest text-zen-600 dark:text-zinc-400" data-i18n="preview">Превью</h3>
@@ -192,9 +185,7 @@ input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.15); }
             </aside>
 
             <!-- ПРАВАЯ КОЛОНКА: ИГРОВОЕ ПОЛЕ -->
-            <section class="space-y-5">
-
-                <!-- Панель статуса -->
+            <section id="gameSection" class="space-y-5 hidden">
                 <div class="glass rounded-3xl border border-white/40 dark:border-zinc-800 shadow-xl p-5">
                     <div class="flex flex-wrap items-center justify-between gap-4">
                         <div class="flex items-center gap-4">
@@ -209,7 +200,7 @@ input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.15); }
                         <div class="flex items-center gap-4 sm:gap-6">
                             <div class="text-right">
                                 <div class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="remaining">Осталось</div>
-                                <div class="text-xl font-extrabold text-amber-600 dark:text-amber-400"><span id="stonesLeft">12</span> <span class="text-xs font-semibold text-zen-600 dark:text-zinc-400">камней</span></div>
+                                <div class="text-xl font-extrabold text-amber-600 dark:text-amber-400"><span id="stonesLeft">12</span> <span class="text-xs font-semibold text-zen-600 dark:text-zinc-400" data-i18n="stonesWord">камней</span></div>
                             </div>
                             <div class="w-px h-10 bg-zen-200 dark:bg-zinc-700 hidden sm:block"></div>
                             <div class="text-right">
@@ -219,30 +210,38 @@ input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.15); }
                         </div>
                     </div>
 
-                    <!-- Прогресс -->
                     <div class="mt-4 h-1.5 rounded-full bg-zen-200 dark:bg-zinc-800 overflow-hidden">
                         <div id="progressBar" class="h-full bg-gradient-to-r from-amber-400 to-amber-600 transition-all duration-500" style="width:0%"></div>
                     </div>
                 </div>
 
-                <!-- Игровое поле -->
                 <div id="boardContainer" class="glass rounded-3xl border border-white/40 dark:border-zinc-800 shadow-xl min-h-[420px] flex items-center justify-center relative p-6 overflow-hidden"></div>
 
-                <!-- Подсказка / панель действий -->
                 <div class="glass rounded-3xl border border-white/40 dark:border-zinc-800 shadow-xl p-4 space-y-3">
                     <div id="hintText" class="text-xs font-semibold text-center text-zen-600 dark:text-zinc-400 min-h-[16px]">Нажмите на камень, чтобы начать</div>
                     <div class="flex items-center gap-2 flex-wrap justify-center">
-                        <button onclick="clearSelection()" id="clearBtn" class="px-4 py-2.5 rounded-xl bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 text-xs font-bold hover:border-amber-500/50 transition disabled:opacity-40">
+                        <button id="clearBtn" type="button" class="px-4 py-2.5 rounded-xl bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 text-xs font-bold hover:border-amber-500/50 transition disabled:opacity-40 disabled:cursor-not-allowed">
                             <span data-i18n="clearBtn">Сбросить</span>
                         </button>
-                        <button onclick="confirmMove()" id="confirmBtn" disabled class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold shadow-lg shadow-amber-600/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none active:scale-[0.98] transition flex items-center gap-2 text-sm">
+                        <button id="confirmBtn" type="button" disabled class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold shadow-lg shadow-amber-600/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none active:scale-[0.98] transition flex items-center gap-2 text-sm">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                             <span data-i18n="confirmBtn">Подтвердить</span>
                         </button>
-                        <button onclick="switchTab('play'); switchScreen('menu')" id="exitBtn" class="px-4 py-2.5 rounded-xl bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 text-xs font-bold hover:border-red-400/50 hover:text-red-500 transition">
+                        <button id="exitBtn" type="button" class="px-4 py-2.5 rounded-xl bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 text-xs font-bold hover:border-red-400/50 hover:text-red-500 transition">
                             <span data-i18n="exitBtn">Сдаться</span>
                         </button>
                     </div>
+                </div>
+            </section>
+
+            <!-- Заглушка "нет игры" когда игра не начата -->
+            <section id="placeholderSection" class="hidden lg:flex items-center justify-center">
+                <div class="glass rounded-3xl border border-white/40 dark:border-zinc-800 shadow-xl p-12 text-center max-w-md">
+                    <div class="w-16 h-16 mx-auto rounded-3xl bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-4 animate-float">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <h3 class="text-lg font-extrabold mb-2" data-i18n="placeholderTitle">Готовы играть?</h3>
+                    <p class="text-sm text-zen-600 dark:text-zinc-400" data-i18n="placeholderDesc">Настройте параметры слева и нажмите «Начать игру».</p>
                 </div>
             </section>
         </div>
@@ -308,7 +307,7 @@ input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.15); }
         <div class="glass rounded-3xl border border-white/40 dark:border-zinc-800 shadow-xl p-8">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-xl font-extrabold" data-i18n="historyTitle">История ходов</h2>
-                <button onclick="clearHistory()" class="text-xs font-bold text-red-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-500/10 transition" data-i18n="clearHistory">Очистить</button>
+                <button id="clearHistoryBtn" type="button" class="text-xs font-bold text-red-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-500/10 transition" data-i18n="clearHistory">Очистить</button>
             </div>
             <div id="historyList" class="space-y-2 max-h-[500px] overflow-y-auto">
                 <div class="text-center text-sm text-zen-600 dark:text-zinc-500 py-12" data-i18n="historyEmpty">История пуста. Сыграйте партию!</div>
@@ -318,15 +317,15 @@ input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.15); }
 
 </main>
 
-<!-- ЭКРАН ПОБЕДЫ (overlay) -->
+<!-- ЭКРАН ПОБЕДЫ -->
 <div id="victoryOverlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm p-4">
     <div class="glass-strong rounded-3xl border border-white/60 dark:border-zinc-700 shadow-2xl p-8 max-w-md w-full text-center space-y-6 animate-pop">
-        <div class="w-20 h-20 bg-gradient-to-br from-amber-400 to-amber-600 rounded-3xl mx-auto flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-amber-600/40 animate-float" id="victoryIcon">🏆</div>
+        <div class="w-20 h-20 bg-gradient-to-br from-amber-400 to-amber-600 rounded-3xl mx-auto flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-amber-600/40 animate-float">🏆</div>
         <div class="space-y-2">
             <h2 id="winnerText" class="text-3xl font-extrabold">Победа!</h2>
             <p class="text-sm text-zen-600 dark:text-zinc-400" data-i18n="victoryDesc">Игра завершена. Прекрасная стратегия.</p>
         </div>
-        <div id="victoryStats" class="grid grid-cols-2 gap-3 text-sm">
+        <div class="grid grid-cols-2 gap-3 text-sm">
             <div class="rounded-2xl bg-amber-500/5 border border-amber-500/20 p-3">
                 <div class="text-[10px] uppercase tracking-widest font-bold text-zen-600 dark:text-zinc-400" data-i18n="statMoves">Ходов</div>
                 <div id="statMoves" class="text-xl font-extrabold text-amber-600 dark:text-amber-400">0</div>
@@ -337,8 +336,8 @@ input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.15); }
             </div>
         </div>
         <div class="flex gap-3">
-            <button onclick="closeVictory(); startGame()" class="flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold shadow-lg transition" data-i18n="restartBtn">Ещё раз</button>
-            <button onclick="closeVictory(); switchScreen('menu')" class="flex-1 py-3.5 rounded-2xl bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 font-bold transition hover:border-amber-500/50" data-i18n="toMenuBtn">В меню</button>
+            <button id="againBtn" type="button" class="flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold shadow-lg transition" data-i18n="restartBtn">Ещё раз</button>
+            <button id="menuBtn" type="button" class="flex-1 py-3.5 rounded-2xl bg-white/60 dark:bg-zinc-800/60 border border-zen-200 dark:border-zinc-700 font-bold transition hover:border-amber-500/50" data-i18n="toMenuBtn">В меню</button>
         </div>
     </div>
 </div>
@@ -374,7 +373,8 @@ const i18n = {
         hintCantSelect:"Эти камни не соседние — выберите другой.",
         hintAITurn:"ИИ думает…",
         stonesWord:"камней",
-        moveTaken:"взял", stoneWord:"камень"
+        moveTaken:"взял", stoneWord:"камень",
+        placeholderTitle:"Готовы играть?", placeholderDesc:"Настройте параметры слева и нажмите «Начать игру»."
     },
     en: {
         subtitle:"Zen Edition", tabPlay:"Play", tabRules:"Rules", tabHistory:"History",
@@ -400,7 +400,8 @@ const i18n = {
         hintCantSelect:"Not adjacent — choose another.",
         hintAITurn:"AI is thinking…",
         stonesWord:"stones",
-        moveTaken:"took", stoneWord:"stone"
+        moveTaken:"took", stoneWord:"stone",
+        placeholderTitle:"Ready to play?", placeholderDesc:"Configure settings on the left and press Start."
     },
     es: {
         subtitle:"Zen Edition", tabPlay:"Jugar", tabRules:"Reglas", tabHistory:"Historial",
@@ -426,7 +427,8 @@ const i18n = {
         hintCantSelect:"No son adyacentes — elige otra.",
         hintAITurn:"La IA está pensando…",
         stonesWord:"piedras",
-        moveTaken:"tomó", stoneWord:"piedra"
+        moveTaken:"tomó", stoneWord:"piedra",
+        placeholderTitle:"¿Listo para jugar?", placeholderDesc:"Configura los ajustes y pulsa Empezar."
     },
     de: {
         subtitle:"Zen Edition", tabPlay:"Spielen", tabRules:"Regeln", tabHistory:"Verlauf",
@@ -452,7 +454,8 @@ const i18n = {
         hintCantSelect:"Nicht benachbart — wähle anders.",
         hintAITurn:"KI denkt…",
         stonesWord:"Steine",
-        moveTaken:"nahm", stoneWord:"Stein"
+        moveTaken:"nahm", stoneWord:"Stein",
+        placeholderTitle:"Bereit zu spielen?", placeholderDesc:"Einstellungen links, dann Start."
     },
     zh: {
         subtitle:"禅意版", tabPlay:"游戏", tabRules:"规则", tabHistory:"历史",
@@ -478,14 +481,12 @@ const i18n = {
         hintCantSelect:"不相邻——请另选。",
         hintAITurn:"AI 思考中……",
         stonesWord:"石子",
-        moveTaken:"取了", stoneWord:"石子"
+        moveTaken:"取了", stoneWord:"石子",
+        placeholderTitle:"准备好开始了吗？", placeholderDesc:"在左侧设置参数后点击开始。"
     }
 };
 
 let currentLang = 'ru';
-
-function t(key) { return (i18n[currentLang] && i18n[current Lang]) ? i18n[currentLang][key] : key; }
-// fix typo safety
 function tr(key) { return (i18n[currentLang] && i18n[currentLang][key]) || key; }
 
 function changeLang(lang) {
@@ -494,7 +495,6 @@ function changeLang(lang) {
         const key = el.getAttribute('data-i18n');
         if (i18n[lang] && i18n[lang][key]) el.innerText = i18n[lang][key];
     });
-    // Обновить динамические тексты
     if (!game.started) updatePreview();
     if (game.started && !game.ended) updateStatusTexts();
     updateHistoryUI();
@@ -520,10 +520,6 @@ function switchTab(name) {
     if (name === 'history') updateHistoryUI();
 }
 
-document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-});
-
 /* ============ СОСТОЯНИЕ ИГРЫ ============ */
 const game = {
     playersCount: 2,
@@ -542,55 +538,13 @@ const game = {
     stonesTaken: 0
 };
 
-/* ============ UI КНОПОК НАСТРОЕК ============ */
+/* ============ ХЕЛПЕРЫ ============ */
 function activate(selector, el) {
     document.querySelectorAll(selector).forEach(b => {
         b.classList.remove('border-amber-500','bg-amber-500/10','text-amber-700','dark:text-amber-400');
     });
     el.classList.add('border-amber-500','bg-amber-500/10','text-amber-700','dark:text-amber-400');
 }
-
-document.querySelectorAll('#playersBtns .player-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (game.started) return;
-        activate('#playersBtns .player-btn', btn);
-        game.playersCount = parseInt(btn.dataset.players);
-        game.isAI = btn.dataset.mode === 'ai';
-    });
-});
-
-document.querySelectorAll('#layoutBtns .layout-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (game.started) return;
-        activate('#layoutBtns .layout-btn', btn);
-        game.layout = btn.dataset.val;
-        updatePreview();
-    });
-});
-
-document.querySelectorAll('#winBtns .win-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (game.started) return;
-        activate('#winBtns .win-btn', btn);
-        btn.querySelector('.radio-dot').classList.add('bg-amber-500','border-amber-500');
-        document.querySelectorAll('#winBtns .win-btn').forEach(b => {
-            if (b !== btn) b.querySelector('.radio-dot').classList.remove('bg-amber-500','border-amber-500');
-        });
-        game.winCondition = btn.dataset.val;
-    });
-});
-
-document.getElementById('stonesRange').addEventListener('input', function() {
-    const v = this.value;
-    document.getElementById('stonesVal').innerText = v;
-    document.getElementById('previewCount').innerText = v;
-    const pct = ((v - 6) / (20 - 6)) * 100;
-    this.style.setProperty('--p', pct + '%');
-    if (!game.started) {
-        game.totalStones = parseInt(v);
-        updatePreview();
-    }
-});
 
 /* ============ ПРЕВЬЮ ============ */
 function updatePreview() {
@@ -623,22 +577,11 @@ function updatePreview() {
 }
 
 /* ============ ЭКРАНЫ ============ */
-function switchScreen(screen) {
-    // screen: 'menu' | 'game'
-    const settings = document.getElementById('settingsPanel');
-    const gameSection = document.querySelector('#tab-play section');
-    if (screen === 'menu') {
-        game.started = false;
-        game.ended = false;
-        settings.classList.remove('hidden');
-        document.getElementById('boardContainer').classList.add('hidden');
-        document.querySelector('#tab-play section').classList.add('hidden');
-    } else {
-        settings.classList.add('hidden');
-        document.getElementById('boardContainer').classList.remove('hidden');
-        document.querySelector('#tab-play section').classList.remove('hidden');
-    }
-    switchTab('play');
+function showGame(on) {
+    document.getElementById('settingsPanel').classList.toggle('hidden', on);
+    document.getElementById('gameSection').classList.toggle('hidden', !on);
+    const ph = document.getElementById('placeholderSection');
+    if (ph) ph.classList.toggle('hidden', on);
 }
 
 /* ============ СТАРТ ИГРЫ ============ */
@@ -654,8 +597,17 @@ function startGame() {
     game.moveCount = 0;
     game.stonesTaken = 0;
     updateHistoryBadge();
-    switchScreen('game');
+    showGame(true);
     updateUI();
+}
+
+function exitToMenu() {
+    game.started = false;
+    game.ended = false;
+    game.selected = [];
+    game.aiThinking = false;
+    showGame(false);
+    updatePreview();
 }
 
 /* ============ ЛОГИКА ============ */
@@ -691,7 +643,6 @@ function handleStoneClick(id) {
         if (areAdjacent(game.selected[0], id)) {
             game.selected.push(id);
         } else {
-            // Подсветить ошибку и заменить выбор
             shakeStone(id);
             setHint(tr('hintCantSelect'), 'error');
             game.selected = [id];
@@ -754,7 +705,6 @@ function confirmMove() {
     const picked = [...game.selected];
     picked.forEach(id => { const s = game.stones.find(x => x.id === id); if (s) s.active = false; });
 
-    // История
     game.moveCount++;
     game.stonesTaken += picked.length;
     game.history.push({
@@ -884,13 +834,13 @@ function renderBoard() {
             const y = Math.sin(angle) * radius;
             const isSelected = game.selected.includes(stone.id);
 
-            // Подсветка возможных соседей
             let neighborHint = false;
             if (game.selected.length === 1 && !isSelected) {
                 neighborHint = areAdjacent(game.selected[0], stone.id);
             }
 
             const btn = document.createElement('button');
+            btn.type = 'button';
             btn.dataset.stoneId = stone.id;
             let cls = 'absolute w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center font-extrabold text-sm transition-all duration-300 shadow-md ';
             if (isSelected) cls += 'bg-gradient-to-br from-amber-500 to-amber-600 text-white ring-4 ring-amber-500/40 scale-110 shadow-lg shadow-amber-600/40';
@@ -915,6 +865,7 @@ function renderBoard() {
             if (game.selected.length === 1 && !isSelected) neighborHint = areAdjacent(game.selected[0], stone.id);
 
             const btn = document.createElement('button');
+            btn.type = 'button';
             btn.dataset.stoneId = stone.id;
             let cls = 'w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center font-extrabold text-sm transition-all duration-300 shadow-md ';
             if (isSelected) cls += 'bg-gradient-to-br from-amber-500 to-amber-600 text-white ring-4 ring-amber-500/40 scale-110 shadow-lg shadow-amber-600/40';
@@ -971,11 +922,71 @@ function clearHistory() {
 }
 
 /* ============ INIT ============ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+document.querySelectorAll('#playersBtns .player-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (game.started) return;
+        activate('#playersBtns .player-btn', btn);
+        game.playersCount = parseInt(btn.dataset.players);
+        game.isAI = btn.dataset.mode === 'ai';
+    });
+});
+document.querySelectorAll('#layoutBtns .layout-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (game.started) return;
+        activate('#layoutBtns .layout-btn', btn);
+        game.layout = btn.dataset.val;
+        updatePreview();
+    });
+});
+document.querySelectorAll('#winBtns .win-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (game.started) return;
+        activate('#winBtns .win-btn', btn);
+        btn.querySelector('.radio-dot').classList.add('bg-amber-500','border-amber-500');
+        document.querySelectorAll('#winBtns .win-btn').forEach(b => {
+            if (b !== btn) b.querySelector('.radio-dot').classList.remove('bg-amber-500','border-amber-500');
+        });
+        game.winCondition = btn.dataset.val;
+    });
+});
+document.getElementById('stonesRange').addEventListener('input', function() {
+    const v = this.value;
+    document.getElementById('stonesVal').innerText = v;
+    document.getElementById('previewCount').innerText = v;
+    const pct = ((v - 6) / (20 - 6)) * 100;
+    this.style.setProperty('--p', pct + '%');
+    if (!game.started) {
+        game.totalStones = parseInt(v);
+        updatePreview();
+    }
+});
+document.getElementById('themeBtn').addEventListener('click', toggleDarkMode);
+document.getElementById('langSelect').addEventListener('change', e => changeLang(e.target.value));
+document.getElementById('startBtn').addEventListener('click', startGame);
+document.getElementById('clearBtn').addEventListener('click', clearSelection);
+document.getElementById('confirmBtn').addEventListener('click', confirmMove);
+document.getElementById('exitBtn').addEventListener('click', exitToMenu);
+document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
+document.getElementById('againBtn').addEventListener('click', () => { closeVictory(); startGame(); });
+document.getElementById('menuBtn').addEventListener('click', () => { closeVictory(); exitToMenu(); });
+
+// Стартовое состояние кнопок настроек
+const firstPlayerBtn = document.querySelector('#playersBtns .player-btn');
+activate('#playersBtns .player-btn', firstPlayerBtn);
+const firstLayoutBtn = document.querySelector('#layoutBtns .layout-btn');
+activate('#layoutBtns .layout-btn', firstLayoutBtn);
+const firstWinBtn = document.querySelector('#winBtns .win-btn');
+activate('#winBtns .win-btn', firstWinBtn);
+firstWinBtn.querySelector('.radio-dot').classList.add('bg-amber-500','border-amber-500');
+
 document.getElementById('stonesRange').dispatchEvent(new Event('input'));
 changeLang('ru');
 updatePreview();
 switchTab('play');
-switchScreen('menu');
+showGame(false);
 </script>
 </body>
 </html>
